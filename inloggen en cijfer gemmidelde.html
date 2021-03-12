@@ -3,6 +3,9 @@
 </html lang="nl">
 	<head>
 		<title>Gemiddelden</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta charset="UTF-8">
+		<script src="js/sintjanapp.js"></script>
 	</head>
 	<body bgcolor="#000000" text="#FFFFFF" alink="#0000FF"><br>
 		Gebruikersnaam: <input id="email" type="text" name="username" size="20" maxlength="20"><br>
@@ -16,7 +19,8 @@
 		<input id="waarde" type="number" value=6 width=50px step=".1" onChange="getGrade();"></input><br>
 		Weging van je volgende cijfer: <br>
 		<input id="weging" type="number" value=2 width=50px step=".1" onchange="getGrade();"></input><br>
-
+		<p id="grid"></p>
+		<p id="answer"></p>
 		<a href="https://www.lego.com">Terug</a>
     </body>
 </html>
