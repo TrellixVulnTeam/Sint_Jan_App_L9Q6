@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<head>
-	<title>Loginsysteem</title>
-</head>
-<body bgcolor="#000000" text="#FFFFFF" link="#FF0000" alink="#FF0000" vlink="#FF0000"><br>
-	Gebruikersnaam: <input type="text" name="username" size="20" maxlength="20"><br>
-	Wachtwoord: <input type="password" name="wachtwoord" size="20" maxlength="20"><br>
-	<br>
-	<button>Log in!</button><br>
-	<br>
-	Dit is de beveiligde pagina.<br>
-	<br>
-	<strong1>wat je wilt staan: </strong1><br>
-	<input type="number" name="wat je wilt staan" step=".01"></input>
-	<strong2>Weging van je volgende cijfer: </strong2><br>
-	<input type="number" name="Weging van je volgende cijfer" step=".01"></input>
+
+</html lang="nl">
+	<head>
+		<title>Gemiddelden</title>
+	</head>
+	<body bgcolor="#000000" text="#FFFFFF" alink="#0000FF"><br>
+		Gebruikersnaam: <input id="email" type="text" name="username" size="20" maxlength="20"><br>
+		Wachtwoord: <input id="password" type="password" name="wachtwoord" size="20" maxlength="20"><br>
+		<br>
+		<button onCLick="login();">Login</button><br>
+		<br>
+		Dit is de beveiligde pagina.<br>
+		<br>
+		wat je wilt staan: <br>
+		<input id="waarde" type="number" value=6 width=50px step=".1" onChange="getGrade();"></input><br>
+		Weging van je volgende cijfer: <br>
+		<input id="weging" type="number" value=2 width=50px step=".1" onchange="getGrade();"></input><br>
+
+		<a href="https://www.lego.com">Terug</a>
     </body>
 </html>
