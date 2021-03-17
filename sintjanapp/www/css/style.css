@@ -1,0 +1,55 @@
+body {
+	margin:0
+}
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+}
+li {
+	float: left;
+}
+li a {
+	display: block;
+	text-align: center;
+	padding: 2vh 2vh;
+	text-decoration: none;
+}
+.icon{
+	width:8vh;
+}
+.block{
+	margin: 0px;
+	padding: 0px;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	font-size: 3vh;
+}
+a{
+	text-decoration:none;
+	font-weight: bold;
+}
+.LessonLine {
+	display: flex;
+	justify-content: space-between;
+	padding: 5px;
+}
+.LessonItem{
+	margin:5px;
+	font-size:3vh;
+}
+#dataHolder{
+	padding:18vh 0px 0px 0px;
+	height:150vh;
+}
+.image{
+	width:8vh;
+}
+#menubar{
+	background-color: #FFFFFF;
+}
