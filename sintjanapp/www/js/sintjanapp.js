@@ -1,5 +1,6 @@
 var linkRE = /https:\/\/somtoday\.nl\/oidc\?code=([a-zA-Z0-9._\-]*)&state=[a-zA-Z0-9.-_]*#/gm;
 var win;
+var access_token = "";
 function myFunction() {
   var x = document.getElementById("myTopnav");
   if (x.className === "topnav w3-container w3-card") {
@@ -31,8 +32,29 @@ function openApp(packageName, activityName, url){//nl.topicus.somtoday.leerling,
 	});
 }
 function openPage(url){
-	win = cordova.InAppBrowser.open(url,"_blank","location=yes,beforeload=yes");
-    win.addEventListener('beforeload', onSomtodayRedirect);
+	win = cordova.InAppBrowser.open(url,"_blank","location=yes");
+	win.addEventListener('loaderror',function(params) {
+		win.close();
+        var linkCode = "code"+params.url.substring(params.url.indexOf('='),params.url.length);
+		var xhr = new XMLHttpRequest();
+		var url = "https://production.somtoday.nl/oauth2/token";
+		xhr.open("POST", url);
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.onreadystatechange = function () {
+		if (xhr.readyState === 4) {
+			//alert(xhr.responseText);
+			//alert(JSON.parse(xhr.responseText).access_token);
+			access_token = JSON.parse(xhr.responseText).access_token;
+			showName();
+		}};
+		var data = "grant_type=authorization_code&"+
+				   "client_id=D50E0C06-32D1-4B41-A137-A9A850C892C2&"+
+				   "client_secret=vDdWdKwPNaPCyhCDhaCnNeydyLxSGNJX&"+
+				   "redirect_uri=somtodayleerling%3A%2F%2Foauth%2Fcallback&"+
+				   "code_verifier=t9b9-QCBB3hwdYa3UW2U2c9hhrhNzDdPww8Xp6wETWQ&"+linkCode;
+	
+		xhr.send(data);
+    });
 	
 }
 function loadStopCallBack() {alert("start");}
@@ -82,12 +104,15 @@ function onMenuKeyDown() {
 }
 function onSomtodayRedirect(event, callback) {
 	alert(event.url);
+	
+	callback(event.url);
+	
 	if(event.url.startsWith("https://somtoday.nl/oidc?code=")) {
 		var btn = document.createElement("p");   // Create a <p> element
 		btn.innerHTML = event.url;                   // Insert text
 		document.body.appendChild(btn);               // Append <button> to <body>
 		var linkCode = event.url.replace("https://somtoday.nl/oidc?","").split("&")[0]+"..";
-		win.close();
+		//win.close();
 		var xhr = new XMLHttpRequest();
 		var url = "https://production.somtoday.nl/oauth2/token";
 		xhr.open("POST", url);
@@ -103,9 +128,20 @@ function onSomtodayRedirect(event, callback) {
 				   "client_secret=vDdWdKwPNaPCyhCDhaCnNeydyLxSGNJX&"+
 				   "redirect_uri=somtodayleerling%3A%2F%2Foauth%2Fcallback&"+
 				   "code_verifier=t9b9-QCBB3hwdYa3UW2U2c9hhrhNzDdPww8Xp6wETWQ&"+linkCode;
-
-		xhr.send(data);
-	}else
-	callback(event.url);
+	
+		//xhr.send(data);
+	}
 }
-// Add similar event handlers for other events
+function showName(){
+	var xhr = new XMLHttpRequest();
+	var url = "https://api.somtoday.nl/rest/v1/leerlingen";
+	xhr.open("GET", url);
+	xhr.setRequestHeader("Authorization", 'Bearer '+access_token);
+	xhr.setRequestHeader("Accept", 'application/json');
+	xhr.onreadystatechange = function () {
+	if (xhr.readyState === 4) {
+		
+		alert(JSON.parse(xhr.responseText).items[0].roepnaam+" "+JSON.parse(xhr.responseText).items[0].achternaam);// JSON.items[0].roepnaam+" "+xhr.responseJSON.items[0].achternaam);
+	}};
+	xhr.send();	
+}
