@@ -21,7 +21,8 @@ img {
 	grid-template-areas:
 		"somtoday itslearning"
 		"zermelo office"
-		"teams sintjan";
+		"teams sintjan"
+		"login .";
 	padding: 10vw;
 }
 .somtoday { grid-area: somtoday; }
@@ -30,6 +31,7 @@ img {
 .office { grid-area: office; }
 .teams { grid-area: teams; }
 .sintjan { grid-area: sintjan; }
+.login { grid-area: login; }
 .somImg{
 	object-fit: cover;
 	object-position: 0% 0%;
