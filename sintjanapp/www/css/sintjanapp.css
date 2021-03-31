@@ -1,82 +1,36 @@
 body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+	background-color: rgb(251,232,237);
+	margin:
+	0px;
 }
-.box {
-	background-color: #7F7F7F;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 100px;
-	height: 100px;
-	margin: 10px;
+h1 {
+	color: blue
 }
-.horizontal {
-	display:inline-block;
+p {
+	color: red;
 }
-.boxItem {
-	flex: 0 0 70px;
+img {
+	width: 35vw;
+	height: 35vw;
 }
-.topnav {
-  overflow: hidden;
-  background-color: #333;
+.grid-container {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr;
+	gap: 5vw 5vw;
+	grid-template-areas:
+		"somtoday itslearning"
+		"zermelo office"
+		"teams sintjan";
+	padding: 10vw;
 }
-#logo{
-  padding: 0px;
-}
-.topnav a {
-  float: left;
-  display: block;
-  color: #f2f2f2;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-  font-size: 17px;
-}
-
-.topnav a:hover {
-  background-color: #ddd;
-  color: black;
-}
-
-.topnav a.active {
-  background-color: #4CAF50;
-  color: white;
-}
-.topnav{padding-right:0px;}
-.topnav .icon {
-  display: none;
-}
-
-@media screen and (max-width: 600px) {
-  .topnav a:not(:first-child) {display: none;}
-  .topnav a.icon {
-    float: right;
-    display: block;
-  }
-}
-#myTopnav {
-
-}
-@media screen and (max-width: 600px) {
-  .topnav.responsive {position: relative;}
-  .topnav.responsive .icon {
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
-  .topnav.responsive a {
-    float: none;
-    display: block;
-    text-align: left;
-  }
-}
-
-
-
+.somtoday { grid-area: somtoday; }
+.itslearning { grid-area: itslearning; }
+.zermelo { grid-area: zermelo; }
+.office { grid-area: office; }
+.teams { grid-area: teams; }
+.sintjan { grid-area: sintjan; }
 .somImg{
 	object-fit: cover;
 	object-position: 0% 0%;
-	width:15vw;
-	height:10vw;
 }
