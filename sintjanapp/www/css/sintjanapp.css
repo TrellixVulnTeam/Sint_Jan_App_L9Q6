@@ -1,6 +1,13 @@
 body {
 	background-color: rgb(251,232,237);
-	margin: 0px;
+	margin:
+	0px;
+}
+h1 {
+	color: blue
+}
+p {
+	color: red;
 }
 img {
 	width: 35vw;
@@ -25,3 +32,7 @@ img {
 .teams { grid-area: teams; }
 .sintjan { grid-area: sintjan; }
 .login { grid-area: login; }
+.somImg{
+	object-fit: cover;
+	object-position: 0% 0%;
+}
