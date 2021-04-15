@@ -2,11 +2,13 @@ var win;//The current In App Browser Window.
 var em = "";//The email of the user.
 var pas = "";//The password of the user.
 var access_token = "";//The acces token of the user.
+var teachers;//
 const lvobuuid = "d091c475-43f3-494f-8b1a-84946a5c2142";//The id of lvob school groep.
 function onLoad() {//Gets called instantly when app starts.
     document.addEventListener("deviceready", onDeviceReady, false);//Call the deviceready function when corodva is ready.
 }
 function onDeviceReady() {//Gets called when corodva is ready.
+	getTeachers();
 	const urlParams = new URLSearchParams(window.location.search);//Gets the paramater in the url. 
 	loadLogin(function () {//Tries to get login info from file and call the function when it is done.
 		if(urlParams.get('email') != null)//If an email is specified in the paramaters, overwirte the old one.
@@ -137,14 +139,14 @@ function printscedule(){//print scedule to html document
 	var currentdate = new Date(); //gets date
 	var begindate =  currentdate.getFullYear()+"-"+pad(currentdate.getMonth()+1,2)+"-"+pad(currentdate.getDate(),2);
 	var enddate =  currentdate.getFullYear()+"-"+pad(currentdate.getMonth()+1,2)+"-"+pad(currentdate.getDate()+1,2);
-	var xhr = new XMLHttpRequest();//create request
 	var url = "https://api.somtoday.nl/rest/v1/afspraken?sort=asc-id&additional=vak&additional=docentAfkortingen&additional=leerlingen&begindatum="+begindate+"&einddatum="+enddate;//sets url
 
+	var xhr = new XMLHttpRequest();//create request
 	xhr.open("GET", url);//opens get request
 	xhr.setRequestHeader("Authorization", 'Bearer '+access_token);//define acces token
 	xhr.setRequestHeader("Accept", 'application/json');//says it wants json in return
 	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");//says were the send data is located
-	xhr.onreadystatechange = function () {//functiion that gets called when the request if done
+	xhr.onreadystatechange = function () {//functiion that gets called when the request is done
 	if (xhr.readyState === 4) {//if request went ok
 		var obj = JSON.parse(xhr.responseText);//create json object
 		for(var i = 0;i<obj.items.length;i++){//for every scedule entry
@@ -158,12 +160,18 @@ function printscedule(){//print scedule to html document
 			var location = obj.items[i].locatie;//get location of subject
     		if(enabled){//if subject is going to happen
 				var element = document.createElement("p");//create p object (<p></p>)
-				element.innerText = fullName+" "+beginTime+" "+endTime+" "+location+" "+teacher+" "+name;//sets text of p element (<p>Wiskunde 10:40 11:30 sa204 lij22 wi</p>)
+				element.innerText = fullName+" "+beginTime+" "+endTime+" "+location+" "+teachers[teacher].name+" "+name;//sets text of p element (<p>Wiskunde 10:40 11:30 sa204 lij22 wi</p>)
 				document.getElementById("scedule").appendChild(element);//add element to the end of the document
 			}
 		}
 	}};
-	xhr.send();//sends request 
+	xhr.send();//sends request
+}
+function getTeachers(){
+	var xhr = new XMLHttpRequest();//create request
+	xhr.open("GET", "https://raw.githubusercontent.com/jktechs/Sint_Jan_App/main/LerarenSintJan.json");//opens get request
+	xhr.onreadystatechange = function () {if (xhr.readyState === 4)teachers = JSON.parse(xhr.responseText);};//functiion that gets called when the request is done
+	xhr.send();//sends request
 }
 function som(x){//function to open som
 	if(!x)
