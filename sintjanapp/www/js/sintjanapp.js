@@ -15,7 +15,10 @@ function onDeviceReady() {
 			pas = urlParams.get('password');
 		if(urlParams.get('rem') == "true")
 			saveLogin(em,pas);
-		login(showName);
+		login(function (){
+			showName();
+			printscedule();
+		});
 	});
 }
 function openApp(packageName, activityName, url){
@@ -152,10 +155,43 @@ function showName(){
 	xhr.setRequestHeader("Accept", 'application/json');
 	xhr.onreadystatechange = function () {
 	if (xhr.readyState === 4) {
-		
 		alert(JSON.parse(xhr.responseText).items[0].roepnaam+" "+JSON.parse(xhr.responseText).items[0].achternaam);// JSON.items[0].roepnaam+" "+xhr.responseJSON.items[0].achternaam);
 	}};
 	xhr.send();	
+}
+function printscedule(){
+
+	var currentdate = new Date(); 
+	var begindate =  currentdate.getFullYear()+"-"+pad(currentdate.getMonth()+1,2)+"-"+pad(currentdate.getDate(),2);
+	var enddate =  currentdate.getFullYear()+"-"+pad(currentdate.getMonth()+1,2)+"-"+pad(currentdate.getDate()+1,2);
+	alert(begindate +" "+ enddate);
+	var xhr = new XMLHttpRequest();
+	var url = "https://api.somtoday.nl/rest/v1/afspraken?sort=asc-id&additional=vak&additional=docentAfkortingen&additional=leerlingen&begindatum="+begindate+"&einddatum="+enddate;
+
+	xhr.open("GET", url);
+	xhr.setRequestHeader("Authorization", 'Bearer '+access_token);
+	xhr.setRequestHeader("Accept", 'application/json');
+	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhr.onreadystatechange = function () {
+	if (xhr.readyState === 4) {
+		var obj = JSON.parse(xhr.responseText);
+		for(var i = 0;i<obj.items.length;i++){
+    		var fullName = obj.items[i].additionalObjects.vak.naam;
+			var beginTime = obj.items[i].beginDatumTijd.substring(11,16);
+			var endTime = obj.items[i].eindDatumTijd.substring(11,16);
+			var enabled = obj.items[i].afspraakStatus == 'ACTIEF';
+			var teacher = obj.items[i].additionalObjects.docentAfkortingen;
+			var name = obj.items[i].additionalObjects.vak.afkorting;
+			var location = obj.items[i].locatie;
+			//alert("fm");
+    		if(enabled){
+				var element = document.createElement("p");
+				element.innerText = fullName+" "+beginTime+" "+endTime+" "+location+" "+teacher+" "+name;
+				document.getElementById("scedule").appendChild(element);
+			}
+		}
+	}};
+	xhr.send();
 }
 function som(x){
 	if(!x)
@@ -186,4 +222,9 @@ function onErrorReadFile(){
 }
 function onErrorReadFile(e) {
 	alert("Failed file write: " + e.toString());
-};
+}
+function pad(num, size) {
+    num = num.toString();
+    while (num.length < size) num = "0" + num;
+    return num;
+}
