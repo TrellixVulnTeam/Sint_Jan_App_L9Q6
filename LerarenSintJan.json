@@ -1,0 +1,74 @@
+{
+  "laj22": {
+    "name": "dhr. J. Laven",
+    "subjects": [
+      "Nederlands"
+    ]
+  },
+  "thm23": {
+    "name": "mevr. M.J.S. Thevissen",
+    "subjects": [
+      "Wiskunde"
+    ]
+  },
+  "clw21": {
+    "name": "dhr. W.A.J. van Cleef",
+    "subjects": [
+      "Natuurkunde"
+    ]
+  },
+  "kue21": {
+    "name": "dhr. E.F.A.M. Kuypers",
+    "subjects": [
+      "Lich. opvoeding",
+      "B.S.M."
+    ]
+  },
+  "smn21": {
+    "name": "dhr. N. Smeets",
+    "subjects": [
+      "Coördinator vwo 4, 5 en 6"
+    ]
+  },
+  "nij21": {
+    "name": "mevr. J.C.P. van den Nieuwenhof",
+    "subjects": [
+      "Engels"
+    ]
+  },
+  "lij21": {
+    "name": "dhr. J.J.H.L. Limpens",
+    "subjects": [
+      "Economie",
+      "Bedrijfseconomie",
+      "M&O"
+    ]
+  },
+  "kej21": {
+    "name": "mevr. J.J.K. Kersjes",
+    "subjects": [
+      "Lich. opvoeding",
+      "B.S.M."
+    ]
+  },
+  "klf21": {
+    "name": "dhr. F.J. van Kleef",
+    "subjects": [
+      "Scheikunde",
+      "Natuurkunde"
+    ]
+  },
+  "hom21": {
+    "name": "dhr. M.C.J. Houben",
+    "subjects": [
+      "Beeldende vormgeving",
+      "C.K.V."
+    ]
+  },
+  "bem22": {
+    "name": "dhr. M.B.A. Beckers",
+    "subjects": [
+      "Wiskunde"
+    ]
+  }
+}
