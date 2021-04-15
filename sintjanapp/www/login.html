@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta charset="UTF-8">
+		<title>Sint-Janscollege</title>
+		<script src="js/sintjanapp.js"></script><!-- 76bde8 -->
+		<link rel="stylesheet" href="css/sintjanapp.css">
+		<script src="cordova.js"></script>
+	</head>
+	<body onload="onLoad()">
+        <input type="email" id="em"><br>
+        <input type="password" id="pas">
+        <input type="checkbox" id="rem"><br>
+        <button onclick="window.open('index.html?email='+document.getElementById('em').value+'&password='+document.getElementById('pas').value+'&rem='+document.getElementById('rem').checked);">login</button>
+        <button onclick="window.open('index.html');">cansole</button>
+	</body>
+</html>

@@ -1,9 +1,15 @@
+var linkRE = /https:\/\/somtoday\.nl\/oidc\?code=([a-zA-Z0-9._\-]*)&state=[a-zA-Z0-9.-_]*#/gm;
 var win;
-var em = "";
-var pas = "";
 var access_token = "";
-var lvobuuid = "d091c475-43f3-494f-8b1a-84946a5c2142";
-function openApp(packageName, activityName, url){
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav w3-container w3-card") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav w3-container w3-card";
+  }
+}
+function openApp(packageName, activityName, url){//nl.topicus.somtoday.leerling, nl.topicus.somtoday.leerlinglib.activity.SplashActivity, https://somtoday.nl/
 	var sApp = cordova["plugins"]["startApp"].set({ /* params */
 		"action":"ACTION_MAIN",
 		"category":"CATEGORY_DEFAULT",
@@ -43,7 +49,7 @@ function openPage(url){
 		}};
 		var data = "grant_type=authorization_code&"+
 				   "client_id=D50E0C06-32D1-4B41-A137-A9A850C892C2&"+
-				   //"client_secret=vDdWdKwPNaPCyhCDhaCnNeydyLxSGNJX&"+
+				   "client_secret=vDdWdKwPNaPCyhCDhaCnNeydyLxSGNJX&"+
 				   "redirect_uri=somtodayleerling%3A%2F%2Foauth%2Fcallback&"+
 				   "code_verifier=t9b9-QCBB3hwdYa3UW2U2c9hhrhNzDdPww8Xp6wETWQ&"+linkCode;
 	
@@ -51,6 +57,8 @@ function openPage(url){
     });
 	
 }
+function loadStopCallBack() {alert("start");}
+function executeScriptCallBack(params) {alert(params);}
 function som(x){
 	if(!x)
 		openApp("nl.topicus.somtoday.leerling", "nl.topicus.somtoday.leerlinglib.activity.SplashActivity", "https://somtoday.nl/");
@@ -69,125 +77,30 @@ function itslearning(x){
 	else
 		openPage("https://lvo.itslearning.com/");
 }
+// example.js file
+// Wait for device API libraries to load
+//
 function onLoad() {
     document.addEventListener("deviceready", onDeviceReady, false);
 }
+
+// device APIs are available
+//
 function onDeviceReady() {
-	//alert("test");
-	const urlParams = new URLSearchParams(window.location.search);
-	loadLogin(function () {if(urlParams.get('email'))
-	em = urlParams.get('email');
-if(urlParams.get('password'))
-	pas = urlParams.get('password');
-if(urlParams.get('rem') == "on")
-	saveLogin(em,pas);
-	login(showName);
-//var emel = document.createElement("p");
-//var pasel = document.createElement("p");
-//emel.innerText = em;
-//pasel.innerText = pas;
-//document.body.append(em);
-//document.body.append(document.createElement("br"));
-//document.body.append(pas);
-});
-	
+    document.addEventListener("pause", onPause, false);
+    document.addEventListener("resume", onResume, false);
+    document.addEventListener("menubutton", onMenuKeyDown, false);
 }
-function login(onLoginDone){
-	var url = "https://production.somtoday.nl/oauth2/token";
-
-	var xhr = new XMLHttpRequest();
-	xhr.open("POST", url);
-	
-	xhr.setRequestHeader("Accept", "application/json");
-	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	
-	xhr.onreadystatechange = function () {
-		if (xhr.readyState === 4) {
-		    //console.log(xhr.responseText);
-			access_token = JSON.parse(xhr.responseText).access_token;
-			onLoginDone();
-	   }
-	};
-	
-	var data = "grant_type=password&username=d091c475-43f3-494f-8b1a-84946a5c2142\\"+em+"&password="+pas+"&scope=openid&client_id=D50E0C06-32D1-4B41-A137-A9A850C892C2"//9509466
-	xhr.send(data);
-	
+function onPause() {
+    // Handle the pause event
 }
-function saveLogin(email, password){
-	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
 
-		//alert('file system open: ' + fs.name);
-		fs.root.getFile("login.bgi", { create: true, exclusive: false }, function (fileEntry) {
-	
-			//alert("fileEntry is file?" + fileEntry.isFile.toString());
-			writeFile(fileEntry, new Blob([email+','+password], { type: 'text/plain' }));
-	
-		}, onErrorCreateFile);
-	
-	}, onErrorLoadFs);
-	em = email;
-	pas = password;
+function onResume() {
+    // Handle the resume event
 }
-function loadLogin(afterload){
-	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
 
-		//alert('file system open: ' + fs.name);
-		fs.root.getFile("login.bgi", { create: true, exclusive: false }, function (fileEntry) {
-	
-			//alert("fileEntry is file?" + fileEntry.isFile.toString());
-			readFile(fileEntry, function() {
-				    //alert("Successful file read: " + this.result);
-				    //displayFileData(fileEntry.fullPath + ": " + this.result);
-					em = this.result.split(",")[0];
-					pas = this.result.split(",")[1];
-				    //alert(em);
-				    //alert(pas);
-					afterload();
-			});
-	
-		}, onErrorCreateFile);
-	
-	}, onErrorLoadFs);
-}
-function writeFile(fileEntry, dataObj) {
-    // Create a FileWriter object for our FileEntry (log.txt).
-    fileEntry.createWriter(function (fileWriter) {
-
-        fileWriter.onwriteend = function() {
-            //alert("Successful file write...");
-            //readFile(fileEntry);
-        };
-
-        fileWriter.onerror = function (e) {
-            alert("Failed file write: " + e.toString());
-        };
-
-        fileWriter.write(dataObj);
-    });
-}
-function readFile(fileEntry, onReady) {
-
-    fileEntry.file(function (file) {
-        var reader = new FileReader();
-
-        reader.onloadend = onReady;
-		//function() {
-        //    alert("Successful file read: " + this.result);
-        //    //displayFileData(fileEntry.fullPath + ": " + this.result);
-        //};
-
-        reader.readAsText(file);
-
-    }, onErrorReadFile);
-}
-function onErrorCreateFile(){
-	alert("create error");
-}
-function onErrorLoadFs(){
-	alert("load sys error");
-}
-function onErrorReadFile(){
-	alert("read error");
+function onMenuKeyDown() {
+    // Handle the menubutton event
 }
 function onSomtodayRedirect(event, callback) {
 	alert(event.url);
@@ -216,7 +129,7 @@ function onSomtodayRedirect(event, callback) {
 				   "redirect_uri=somtodayleerling%3A%2F%2Foauth%2Fcallback&"+
 				   "code_verifier=t9b9-QCBB3hwdYa3UW2U2c9hhrhNzDdPww8Xp6wETWQ&"+linkCode;
 	
-		xhr.send(data);
+		//xhr.send(data);
 	}
 }
 function showName(){

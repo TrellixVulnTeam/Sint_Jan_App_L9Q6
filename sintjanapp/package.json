@@ -15,6 +15,7 @@
   "devDependencies": {
     "cordova": "^10.0.0",
     "cordova-android": "^9.0.0",
+    "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-inappbrowser": "^5.0.0",
     "cordova-plugin-splashscreen": "^6.0.0",
     "cordova-plugin-startapp-zzz": "^1.0.1",
@@ -25,7 +26,8 @@
       "cordova-plugin-whitelist": {},
       "cordova-plugin-inappbrowser": {},
       "cordova-plugin-splashscreen": {},
-      "cordova-plugin-startapp-zzz": {}
+      "cordova-plugin-startapp-zzz": {},
+      "cordova-plugin-file": {}
     },
     "platforms": [
       "android"
