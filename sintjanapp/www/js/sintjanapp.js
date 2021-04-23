@@ -51,7 +51,7 @@ function openPage(url){//open a page in the In App Browser
 		win.close();//close the window
         var linkCode = "code"+params.url.substring(params.url.indexOf('='),params.url.length);//get the code from the logine
 		var xhr = new XMLHttpRequest();//create a request
-		var url = "https://production.somtoday.nl/oauth2/token";//define the target url
+		var url = "https://somtoday.nl/oauth2/token";//define the target url
 		xhr.open("POST", url);//open the request
 		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");//define were the send data resides
 		xhr.setRequestHeader("Accept", "application/json");//says it wants json back
@@ -69,7 +69,7 @@ function openPage(url){//open a page in the In App Browser
     });
 }
 function login(onLoginDone){//this function gets a token by email and number password
-	var url = "https://production.somtoday.nl/oauth2/token";//define url
+	var url = "https://somtoday.nl/oauth2/token";//define url
 	var xhr = new XMLHttpRequest();//create request
 	xhr.open("POST", url);//open request
 	xhr.setRequestHeader("Accept", "application/json");//says it wants json back
