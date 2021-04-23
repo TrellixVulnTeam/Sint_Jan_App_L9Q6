@@ -29,7 +29,6 @@ function openApp(packageName, activityName, url){//Tries to open an app. if it f
 		"category":"CATEGORY_DEFAULT",
 		"type":"text/css",
 		"package":packageName,
-		/*"uri":"file://data/index.html",*/
 		"flags":["FLAG_ACTIVITY_CLEAR_TOP","FLAG_ACTIVITY_CLEAR_TASK"],
 		"component": [packageName,activityName],
 		"intentstart":"startActivity",
@@ -38,9 +37,7 @@ function openApp(packageName, activityName, url){//Tries to open an app. if it f
 		sApp.start(function() {//if it does start the app
 		}, function(error) {//if the app exists but there is still an error alert the user.
 			alert(error);
-		}, function() {//when done print "done"
-			console.log("done");
-		});
+		}, function() {});
 	}, function(error) {//if the app doesn't exist open the website
 		openPage(url);
 	});
