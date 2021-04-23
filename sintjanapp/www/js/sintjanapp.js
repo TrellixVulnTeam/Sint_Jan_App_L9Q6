@@ -81,7 +81,8 @@ function login(onLoginDone){//this function gets a token by email and number pas
 	   }
 	};
 	var data = "grant_type=password&"+//define the data to send
-			   "username=d091c475-43f3-494f-8b1a-84946a5c2142\\"+em+"&password="+pas+"&"+
+			   "username=d091c475-43f3-494f-8b1a-84946a5c2142\\"+em+
+			   "&password="+pas+"&"+
 			   "scope=openid&"+
 			   "client_id=D50E0C06-32D1-4B41-A137-A9A850C892C2";
 	xhr.send(data);//send request for a token
