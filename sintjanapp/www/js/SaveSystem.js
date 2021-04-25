@@ -27,7 +27,9 @@ class SaveSystem{
             var reader = new FileReader();//create file reader
             reader.onloadend = function() {//read file
                 var obj = null;
-                obj = JSON.parse(this.result);
+                try{
+                    obj = JSON.parse(this.result);
+                }catch(e){}
                 afterload(obj);
             };//calls function when done reading
             reader.readAsText(file);//starts reading

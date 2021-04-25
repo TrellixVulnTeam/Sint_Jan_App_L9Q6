@@ -14,7 +14,7 @@ class Somtoday {
       this.onTokenUpdate = null;
     }
     CheckAccessToken(onTokenSafe){
-        var now = new Date().getTime();
+        var now = new Date().getTime()/100;
         if(now - this.lastRequest > 3600){
             if(now - this.lastRequest > 1296000){
 			    //this.GetToken("password",this.password,"username="+Somtoday.LVOBuuid+"\\"+this.email,onTokenSafe);
@@ -36,8 +36,8 @@ class Somtoday {
                 var responseJSON = JSON.parse(xhr.responseText);
 			    som.access_token = responseJSON.access_token;//set the new access token
 			    som.refresh_token = responseJSON.refresh_token;//set the new refresh token
-                som.lastRequest = new Date().getTime();
-                onTokenUpdate();
+                som.lastRequest = new Date().getTime()/100;
+                som.onTokenUpdate();
                 if(parse_response != null)
                     parse_response(responseJSON.access_token);
 	        }
@@ -54,13 +54,14 @@ class Somtoday {
 		xhr.open("POST", Somtoday.tokenEndpoint);//open the request
 		xhr.setRequestHeader("Accept", "application/json");//says it wants json back
 		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");//define were the send data resides
+        var som = this;
 		xhr.onreadystatechange = function () {//set the function that gets called when the request is finished
 		    if (xhr.readyState === 4) {//check if it went ok
                 var responseJSON = JSON.parse(xhr.responseText);
 			    som.access_token = responseJSON.access_token;//set the new access token
 			    som.refresh_token = responseJSON.refresh_token;//set the new refresh token
-                som.lastRequest = new Date().getTime();
-                onTokenUpdate();
+                som.lastRequest = new Date().getTime()/100;
+                som.onTokenUpdate();
                 if(parse_response != null)
                     parse_response(responseJSON.access_token);
 	    	}
