@@ -6,14 +6,15 @@
 		<title>Sint-Janscollege</title>
 		<script src="js/Somtoday.js"></script>
 		<script src="js/sintjanapp.js"></script><!-- 76bde8 -->
+		<script src="js/SaveSystem.js"></script>
 		<link rel="stylesheet" href="css/sintjanapp.css">
 		<script src="cordova.js"></script>
 	</head>
 	<body onload="onLoad()">
 		<div class="grid-container">
-			<div class="somtoday"><a    onclick='som(false);'><img                                                        src="img/Som.png"         alt="som"></a></div>
-			<div class="itslearning"><a onclick='itslearning(false);'><img                                                src="img/Its.png"         alt="itslearning"></a></div>
-			<div class="zermelo"><a     onclick='zermelo(false);'><img                                                    src="img/Zer.png"         alt="zermelo"></a></div>
+			<div class="somtoday"><a    onclick='openApplication(appDict.somtoday,false);'><img                                                        src="img/Som.png"         alt="som"></a></div>
+			<div class="itslearning"><a onclick='openApplication(appDict.itslearning,false);'><img                                                src="img/Its.png"         alt="itslearning"></a></div>
+			<div class="zermelo"><a     onclick='openApplication(appDict.zermelo,false);'><img                                                    src="img/Zer.png"         alt="zermelo"></a></div>
 			<div class="office"><a      onclick='openPage("https://www.office.com/login?es=Click&ru=%2F&msafed=0");'><img src="img/Off.png"         alt="office"></a></div>
 			<div class="teams"><a       onclick="openPage('https://teams.microsoft.com');"><img                           src="img/Tem.png"         alt="teams"></a></div>
 			<div class="sintjan"><a     onclick="openPage('https://www.sintjan-lvo.nl');"><img                            src="img/logosintjan.svg" alt="sintjan"></a></div>

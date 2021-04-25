@@ -3,7 +3,7 @@ class SaveSystem{
         this.fileName = fileName;
         this.fileEntry = null;
         var fileSys = this;
-        GetFile(fileName,function(fileEntry){fileSys.fileEntry = fileEntry;onReady(fileSys);},onErrorCreateFile,onErrorLoadFs);
+        SaveSystem.GetFile(fileName,function(fileEntry){fileSys.fileEntry = fileEntry;onReady();},onErrorCreateFile,onErrorLoadFs);
     }
     static GetFile(fileName,useFileEntry,onErrorCreateFile,onErrorLoadFs){
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {//gets a filesystem object
@@ -26,7 +26,9 @@ class SaveSystem{
         this.fileEntry.file(function (file) {//create file object
             var reader = new FileReader();//create file reader
             reader.onloadend = function() {//read file
-                afterload(JSON.parse(this.result));
+                var obj = null;
+                obj = JSON.parse(this.result);
+                afterload(obj);
             };//calls function when done reading
             reader.readAsText(file);//starts reading
         }, onErrorReadFile);
