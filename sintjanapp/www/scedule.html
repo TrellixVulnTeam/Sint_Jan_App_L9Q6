@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style>
+			.border{
+				width: 8vw;
+				text-align: right;
+			}
+			.pauze {
+				background-color: lightskyblue;
+			}
+			.block{
+				background-color:grey;
+				position: absolute;
+			}
+			.grid-container2 {
+				height: 160vw;
+				display: grid;
+				grid-template-columns: 8% 92%;
+				grid-template-rows: 1fr 1fr .2fr 1fr 1fr .9fr 1fr 1fr .2fr 1fr 1fr;
+				gap: 0px 0px;
+				grid-template-areas:
+					"uur1 ."
+					"uur2 ."
+					"pauze1 blank1"
+					"uur3 ."
+					"uur4 ."
+					"pauze2 blank2"
+					"uur5 ."
+					"uur6 ."
+					"pauze3 blank3"
+					"uur7 ."
+					"uur8 .";
+			}
+			body{
+				margin: 0px;
+				font-size: 3vw;
+				text-align: center;
+			}
+			.Rooster { 
+				background-color: #004daa;
+				color: white;
+				width: 100%;
+			}
+			#date{
+				background-color: cadetblue;
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+			}
+			.grid-container3 {
+				display: grid;
+				grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+				grid-template-rows: 1fr;
+				gap: 0px 0px;
+				grid-template-areas:
+					"rooster huiswerk cijfers vakken meer";
+			}
+
+			.rooster { grid-area: rooster; }
+
+			.huiswerk { grid-area: huiswerk; }
+
+			.cijfers { grid-area: cijfers; }
+
+			.vakken { grid-area: vakken; }
+
+			.meer { grid-area: meer; }
+
+		</style>
+		<script src="js/Somtoday.js"></script>
+		<script src="js/sintjanapp.js"></script>
+		<script src="js/SaveSystem.js"></script>
+		<script src="cordova.js"></script>
+</head>
+<body onload="onLoad('sced')">
+	<div id="scedule" class="grid-container2">
+		<div style="grid-area: blank1" class="pauze"></div>
+		<div style="grid-area: blank2" class="pauze"></div>
+		<div style="grid-area: blank3" class="pauze"></div>
+		<div style="grid-area: uur1"   class="border" id="pauze">8:30</div>
+		<div style="grid-area: uur2"   class="border">9:20</div>
+		<div style="grid-area: pauze1" class="pauze border"></div>
+		<div style="grid-area: uur3"   class="border">10:20</div>
+		<div style="grid-area: uur4"   class="border">11:10</div>
+		<div style="grid-area: pauze2" class="pauze border"></div>
+		<div style="grid-area: uur5"   class="border">12:45</div>
+		<div style="grid-area: uur6"   class="border">13:35</div>
+		<div style="grid-area: pauze3" class="pauze border"></div>
+		<div style="grid-area: uur7"   class="border">14:35</div>
+		<div style="grid-area: uur8"   class="border">15:25</div>
+	</div>
+	<div id="date">
+		<div class="Rooster">
+			<p1>Rooster</p1>
+		</div>
+		<table id="dateTable" style="width: calc(100% - 40px - 5px); height: 80%" cellspacing="0%">
+			<tbody>
+				<tr>
+					<td>ma</td>
+					<td>di</td>
+					<td>wo</td>
+					<td>do</td>
+					<td>vr</td>
+					<td>za</td>
+					<td>zo</td>
+				</tr>
+				<tr>
+					<td>26</td>
+					<td>27</td>
+					<td>28</td>
+					<td>29</td>
+					<td>30</td>
+					<td>1</td>
+					<td>2</td>
+				</tr>
+				<tr>
+					<td>apr.</td>
+					<td>apr.</td>
+					<td>apr.</td>
+					<td>apr.</td>
+					<td>apr.</td>
+					<td>mei</td>
+					<td>mei</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+<script>
+	function textWidth(str, css) {
+    	const span = document.createElement('span')
+    	span.style.position = 'fixed';
+    	span.style.visibility = 'hidden';
+    	document.body.appendChild(span);
+    	Object.assign(span.style, css || {});
+    	span.innerText = str;
+    	const w = Math.round(span.getBoundingClientRect().width);
+    	const h = Math.round(span.getBoundingClientRect().height);
+    	span.remove();
+    	return [w,h];
+	}
+	window.onresize = function(){
+		var div1 = document.getElementById("date");
+		var div2 = document.getElementById("scedule");
+		div2.style.marginTop = div1.clientHeight + "px";
+		var newWidth = document.getElementById("pauze").clientWidth;
+		div2 = document.getElementById("dateTable");
+		div2.style.marginLeft = newWidth+"px";
+		div2.style.width = "calc(100% - "+newWidth+"px)";
+		var fullWidth = Math.max(document.body.scrollWidth, document.documentElement.scrollWidth, document.body.offsetWidth, document.documentElement.offsetWidth, document.documentElement.clientWidth);
+		var sceduleHeightPerMinute = document.getElementById("scedule").clientHeight/9.3;
+
+		for(var i = 0;i<3;i++){
+			var block = document.createElement("div");
+			block.id = "block"+i;
+			block.className = "block";
+			var nameText = document.createElement("p");
+			nameText.innerText = "Nam";
+			var locationText = document.createElement("p");
+			locationText.innerText = "loc";
+			block.append(nameText);
+			block.append(locationText);
+			block.style.left = newWidth+Math.floor(Math.random()*7)*(fullWidth - newWidth)/7+"px";
+			block.style.width = (fullWidth - newWidth)/7+"px";
+			block.style.top = div1.clientHeight+sceduleHeightPerMinute*Math.floor(Math.random()*2)+"px";
+			block.style.height = sceduleHeightPerMinute+"px";
+			document.body.append(block);
+		}
+	}
+	window.onresize();
+</script>
+	<div class="grid-container3" style="position: fixed;background-color: greenyellow;padding-top: 10px;padding-bottom: 10px;bottom: 0px;width: 100%;">
+		<div class="rooster">rooster</div>
+		<div class="huiswerk">huiswerk</div>
+		<div class="cijfers">cijfers</div>
+		<div class="vakken">vakken</div>
+		<div class="meer">meer</div>
+	</div>
+	<div id="scedule"></div>
+</body>

@@ -1,38 +1,39 @@
-class SaveSystem{
-    constructor(fileName,onReady,onErrorCreateFile,onErrorLoadFs){
-        this.fileName = fileName;
-        this.fileEntry = null;
-        var fileSys = this;
-        SaveSystem.GetFile(fileName,function(fileEntry){fileSys.fileEntry = fileEntry;onReady();},onErrorCreateFile,onErrorLoadFs);
-    }
-    static GetFile(fileName,useFileEntry,onErrorCreateFile,onErrorLoadFs){
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {//gets a filesystem object
-            fs.root.getFile(fileName, { create: true, exclusive: false }, function (fileEntry) {//creates a file object
-                useFileEntry(fileEntry);
-            }, onErrorCreateFile);
-        }, onErrorLoadFs);
-    }
-    SaveJSON(json,onDone,onErrorWriteFile){//saves login data (error has input)
-        this.fileEntry.createWriter(function (fileWriter) {//create a file writer
-            fileWriter.onwriteend = function() {
-                if(onDone != null)
-                    onDone();
-            };
-            fileWriter.onerror = onErrorWriteFile;
-            fileWriter.write(new Blob([JSON.stringify(json)], { type: 'text/plain' }));//write blob to file
+class SaveSystem {
+    static GetFile(fileName) {
+        return new Promise((resolve, reject) => {
+            var fileSys = new SaveSystem();
+            fileSys.fileName = fileName;
+            fileSys.fileEntry = null;
+            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {//get a filesystem object
+                fs.root.getFile(fileName, { create: true, exclusive: false }, function (fileEntry) {//creates a file object
+                    fileSys.fileEntry = fileEntry;
+                    resolve(fileSys);
+                }, reject);
+            }, reject);
         });
     }
-    loadJSON(afterload,onErrorReadFile){//load login data from file (error has input)
-        this.fileEntry.file(function (file) {//create file object
-            var reader = new FileReader();//create file reader
-            reader.onloadend = function() {//read file
-                var obj = null;
-                try{
-                    obj = JSON.parse(this.result);
-                }catch(e){}
-                afterload(obj);
-            };//calls function when done reading
-            reader.readAsText(file);//starts reading
-        }, onErrorReadFile);
+    SaveJSON(json) {//saves json data
+        return new Promise((resolve, reject) => {
+            this.fileEntry.createWriter(function (fileWriter) {//create a file writer
+                fileWriter.onwriteend = resolve;
+                fileWriter.onerror = reject;
+                fileWriter.write(new Blob([JSON.stringify(json)], { type: 'text/plain' }));//write blob to file
+            });
+        });
+    }
+    loadJSON() {//load json data from file
+        return new Promise((resolve, reject) => {
+            this.fileEntry.file(function (file) {//create file object
+                var reader = new FileReader();//create file reader
+                reader.onloadend = function () {//when done reading the file
+                    var obj = null;
+                    try {//try to create a json object from the text in the file (if an error ocures obj will stay null)
+                        obj = JSON.parse(this.result);
+                    } catch (e) { }
+                    resolve(obj);
+                };
+                reader.readAsText(file);//starts reading
+            }, reject);
+        });
     }
 }
