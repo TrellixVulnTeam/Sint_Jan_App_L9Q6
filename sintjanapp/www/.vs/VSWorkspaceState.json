@@ -2,8 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\css",
-    "\\js"
+    "\\js",
+    "\\launchpad",
+    "\\scedule"
   ],
-  "SelectedNode": "\\js\\sintjanapp.js",
+  "SelectedNode": "\\scedule\\script.js",
   "PreviewInSolutionExplorer": false
 }

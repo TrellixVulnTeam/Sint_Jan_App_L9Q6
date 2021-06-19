@@ -1,0 +1,84 @@
+.border {
+    width: 8vw;
+    text-align: right;
+}
+body{
+    overflow: auto;
+}
+.pauze {
+    background-color: lightskyblue;
+}
+
+.block {
+    background-color: grey;
+    position: absolute;
+}
+
+.grid-container2 {
+    height: 160vw;
+    display: grid;
+    grid-template-columns: 8% 92%;
+    grid-template-rows: 1fr .9fr .9fr .6fr .9fr .9fr .7fr .9fr .9fr .4fr 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+        "uur1 ."
+        "uur2 ."
+        "uur3 ."
+        "pauze1 blank1"
+        "uur4 ."
+        "uur5 ."
+        "pauze2 blank2"
+        "uur6 ."
+        "uur7 ."
+        "pauze3 blank3"
+        "uur8 .";
+}
+
+body {
+    margin: 0px;
+    font-size: 3vw;
+    text-align: center;
+}
+
+.Rooster {
+    background-color: #004daa;
+    color: white;
+    width: 100%;
+}
+
+#date {
+    background-color: cadetblue;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.grid-container3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+        "rooster huiswerk cijfers vakken links";
+}
+
+.rooster {
+    grid-area: rooster;
+}
+
+.huiswerk {
+    grid-area: huiswerk;
+}
+
+.cijfers {
+    grid-area: cijfers;
+}
+
+.vakken {
+    grid-area: vakken;
+}
+
+.links {
+    grid-area: links;
+}

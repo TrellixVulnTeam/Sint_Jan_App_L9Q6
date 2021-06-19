@@ -25,6 +25,13 @@
 	<preference name="AppendUserAgent" value="Chrome/89.0.4389.90" />
     <platform name="android">
         <allow-intent href="market:*" />
+		<resource-file src="res/values/colors.xml" target="/app/src/main/res/values/colors.xml" />
+		<icon background="@color/background" density="ldpi" foreground="res/icon/android/ldpi-foreground.png" />
+		<icon background="@color/background" density="mdpi" foreground="res/icon/android/mdpi-foreground.png" />
+		<icon background="@color/background" density="hdpi" foreground="res/icon/android/hdpi-foreground.png" />
+		<icon background="@color/background" density="xhdpi" foreground="res/icon/android/xhdpi-foreground.png" />
+		<icon background="@color/background" density="xxhdpi" foreground="res/icon/android/xxhdpi-foreground.png" />
+		<icon background="@color/background" density="xxxhdpi" foreground="res/icon/android/xxxhdpi-foreground.png" />
 		<splash src="res/screen/android/logo.png" density="land-hdpi" />
 		<splash src="res/screen/android/logo.png" density="land-ldpi" />
 		<splash src="res/screen/android/logo.png" density="land-mdpi" />

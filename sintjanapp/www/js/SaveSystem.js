@@ -29,7 +29,7 @@ class SaveSystem {
                     var obj = null;
                     try {//try to create a json object from the text in the file (if an error ocures obj will stay null)
                         obj = JSON.parse(this.result);
-                    } catch (e) { }
+                    } catch (e) { reject(e); }
                     resolve(obj);
                 };
                 reader.readAsText(file);//starts reading

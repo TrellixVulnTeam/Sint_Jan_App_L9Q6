@@ -1,0 +1,30 @@
+.grid-container3 {
+    font-size: 3vw;
+    text-align: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+        "rooster huiswerk cijfers vakken links";
+}
+
+.rooster {
+    grid-area: rooster;
+}
+
+.huiswerk {
+    grid-area: huiswerk;
+}
+
+.cijfers {
+    grid-area: cijfers;
+}
+
+.vakken {
+    grid-area: vakken;
+}
+
+.links {
+    grid-area: links;
+}

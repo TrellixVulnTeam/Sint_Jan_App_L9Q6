@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>Sint-Janscollege</title>
+    <link rel="stylesheet" href="calc/style.css">
+    <script src="calc/script.js"></script>
+    <script src="js/Somtoday.js"></script>
+    <script src="js/SaveSystem.js"></script>
+    <script src="cordova.js"></script>
+</head>
+<body onload="onLoad()" style="margin:0px">
+    <p id="grid"></p>
+    <div id="grades"></div>
+    <p>
+        Het te halen gemiddelde: <input id="waarde" type="number" step=".1" value=6 onChange="getGrade();"><br>
+        De volgende toets weging: <input id="weging" type="number" step=".1" value=2 onchange="getGrade();">
+    </p>
+    <p id="answer"></p>
+    <div class="grid-container3" style="position: fixed;background-color: orangered;padding-top: 10px;padding-bottom: 10px;bottom: 0px;width: 100%;">
+        <div class="rooster" onclick="window.location.href = 'scedule.html'">rooster</div>
+        <div class="huiswerk">huiswerk</div>
+        <div class="cijfers" onclick="window.location.href = 'calc.html'">cijfers</div>
+        <div class="vakken">vakken</div>
+        <div class="links" onclick="window.location.href = 'index.html'">links</div>
+    </div>
+</body>
+</html>
