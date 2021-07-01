@@ -5,9 +5,14 @@ function getGrade() {
 	t = 0;
 	b = 0;
 	gradeList[selected].forEach(function (item, index) {
-		var gr = document.createElement("p");
-		gr.innerText = item[0]+", "+item[1];
-		document.getElementById("grades").appendChild(gr);
+		var group = document.createElement("div");
+		var grade = document.createElement("h3");
+		var count = document.createElement("h6");
+		grade.innerText = item[0];
+		count.innerText = "x"+item[1];
+		group.appendChild(grade);
+		group.appendChild(count);
+		document.getElementById("grades").appendChild(group);
 		t += item[1] * item[0];
 		b += item[1];
 	});

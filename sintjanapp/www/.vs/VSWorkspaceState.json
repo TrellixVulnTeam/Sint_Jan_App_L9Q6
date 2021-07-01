@@ -1,11 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\css",
-    "\\js",
+    "\\calc",
     "\\launchpad",
     "\\scedule"
   ],
-  "SelectedNode": "\\scedule\\script.js",
+  "SelectedNode": "\\scedule\\style.css",
   "PreviewInSolutionExplorer": false
 }
