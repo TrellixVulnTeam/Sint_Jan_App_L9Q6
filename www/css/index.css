@@ -1,0 +1,113 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+html{
+    --background-color:255, 255, 255;
+    --text-color: 0, 0, 0;
+    --accent-color: 244, 244, 244;
+}
+body {
+    font-family: sans-serif;
+    overflow: hidden;
+    background: rgb(var(--background-color));
+    color: rgb(var(--text-color));
+}
+.centreChild{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.globalHorizontalCentre{
+    left:50%;
+    transform: translate(-50%,0)
+}
+.container {
+    overflow: auto;
+    border: 2px solid rgb(var(--accent-color));
+    padding: 10px 10px 10px 10px;
+    border-radius: 5px;
+    background: rgb(var(--background-color));
+    position: absolute;
+    width: 100%;
+}
+#data{
+    height: 80vh;
+    width:100%;
+    position: relative;
+    top:10vh;
+}
+.shadow{
+    filter: drop-shadow( 6px 6px 6px rgba(var(--text-color), 0.2));
+    z-index:999;
+}
+.btn {
+    display: inline-block;
+    background: rgb(var(--accent-color));
+    color: rgb(var(--text-color));
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 15px;
+    font-family: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+    .btn:focus {
+        outline: none;
+    }
+    .btn:active {
+        transform: scale(0.98);
+    }
+.task {
+    background: rgb(var(--accent-color));
+    margin: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+.selectable {
+    user-select: text;
+}
+@keyframes pageSlide {
+
+    0% {
+        transform: translate(100vw,0px);
+    }
+
+    100% {
+        transform: translate(0px,0px);
+    }
+}/* window.matchMedia('(prefers-color-scheme: dark)').matches */
+input[type="checkbox"] {
+    visibility: hidden;
+    position: relative;
+}
+input[type="checkbox"]::before {
+    display: block;
+    visibility: visible;
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color: lightgray;
+    border: gray solid 1px;
+    position: absolute;
+    cursor: pointer;
+}
+input[type="checkbox"]:checked::after {
+    display: block;
+    visibility: visible;
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color: blue;
+    position: absolute;
+    cursor: pointer;
+    border: gray solid 1px;
+}
