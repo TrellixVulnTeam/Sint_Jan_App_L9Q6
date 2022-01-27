@@ -1,0 +1,30 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "nl.sint_jan.app"
+    },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "nl.sint_jan.app"
+    },
+    "com.lampa.startapp": {
+      "PACKAGE_NAME": "nl.sint_jan.app"
+    },
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "nl.sint_jan.app"
+    },
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "nl.sint_jan.app"
+    },
+    "cordova-plugin-http": {
+      "PACKAGE_NAME": "nl.sint_jan.app"
+    }
+  },
+  "dependent_plugins": {}
+}
