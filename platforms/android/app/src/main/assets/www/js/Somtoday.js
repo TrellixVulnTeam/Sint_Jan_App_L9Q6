@@ -3,37 +3,7 @@ Somtoday.client_id = "D50E0C06-32D1-4B41-A137-A9A850C892C2"; //static id for stu
 Somtoday.LVOBuuid = "d091c475-43f3-494f-8b1a-84946a5c2142"; //static id for lvob
 Somtoday.tokenEndpoint = "https://inloggen.somtoday.nl/oauth2/token"; // endpoint for all token requests
 Somtoday.baseEndpoint = "https://api.somtoday.nl/rest/v1/"; // endpoint for all other requests
-var pad = (num, size) => {//padds a number with leading zerros  (4 => "04")
-    num = num.toString();
-    while (num.length < size) num = "0" + num;
-    return num;
-}
-var post = async (link, data, header) => {
-    if(typeof cordovaHTTP == "undefined") throw "cordovaHTTP not found";
-    return new Promise((resolve, reject) => {
-        cordovaHTTP.post(link, data, header, function (response) {
-            try{
-                response.data = JSON.parse(response.data);
-                resolve(response.data);
-            } catch(e){reject(e);}
-        }, function (response) {
-            reject("err2: " + response.status + " "+link);
-        });
-    });
-}
-var get = async (link, header) => {
-    if(typeof cordovaHTTP == "undefined") throw "cordovaHTTP not found";
-    return new Promise((resolve, reject) => {
-        cordovaHTTP.get(link, {}, header, function (response) {
-            try{
-                response.data = JSON.parse(response.data);
-                resolve(response.data);
-            }catch(e){reject(e);}
-        }, function (response) {
-            reject("err1: " + response.status + " "+link);
-        });
-    });
-}
+Somtoday.loginLink = "https://somtoday.nl/oauth2/authorize?redirect_uri=somtodayleerling://oauth/callback&client_id=D50E0C06-32D1-4B41-A137-A9A850C892C2&response_type=code&prompt=login&state=UNlYiXONB69K8uNwNJ2rCw&scope=openid&code_challenge=tCqjy6FPb1kdOfvSa43D8a7j8FLDmKFCAz8EdRGdtQA&code_challenge_method=S256&tenant_uuid=788de26b-bf5a-46d5-bb58-f35ff7bdd172&oidc_iss=https://login.microsoftonline.com/788de26b-bf5a-46d5-bb58-f35ff7bdd172/v2.0&session=no_session";
 Somtoday.CheckAccessToken = async (somObj) => {
     if (!(new Date().getTime() < somObj.access_token_expire_time)) {
         if (!(new Date().getTime() < somObj.refresh_token_expire_time)) {
@@ -49,7 +19,8 @@ Somtoday.GetToken = async (somObj, grant_type, grant_value, extra_parms) => {//g
         "scope": "openid",
         "client_id": Somtoday.client_id
     };
-    urlencoded[grant_type] = grant_value;
+    if(grant_value != "")
+        urlencoded[grant_type] = grant_value;
     if (extra_parms != null)
         for (var extra_name in extra_parms)
             urlencoded[extra_name] = extra_parms[extra_name];
@@ -90,4 +61,21 @@ Somtoday.GetGrades = async (somObj, userId) => {//gets the scedule between two d
         }
     }
     return gradeDict;
+}
+Somtoday.setLoginWindow = (som, loginWindow) => {
+    som.loginWindow = loginWindow;
+    loginWindow.addEventListener('beforeload', (e,c) =>{Somtoday.onSomtodayRedirect(som,e,c)});
+}
+Somtoday.onSomtodayRedirect = async (som, event, callback) => {
+	if(event.url.startsWith("somtodayleerling://oauth:443/callback")){
+		var linkCode = event.url.replace("somtodayleerling://oauth:443/callback?code=","").split("&")[0];
+		som.loginWindow.close();
+        alert("before redirect");
+        await Somtoday.GetToken(som, "authorization_code", "", {
+            "redirect_uri":"somtodayleerling://oauth/callback",
+            "code_verifier":"t9b9-QCBB3hwdYa3UW2U2c9hhrhNzDdPww8Xp6wETWQ",
+            "code":linkCode
+        });
+	}else
+	    callback(event.url);
 }

@@ -37,6 +37,13 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
     <allow-intent href="market:*" />
+    <resource-file src="res/values/colors.xml" target="/app/src/main/res/values/colors.xml" />
+    <icon background="@color/background" density="ldpi" foreground="res/icon/android/logosintjanldpi.png" />
+    <icon background="@color/background" density="mdpi" foreground="res/icon/android/logosintjanmdpi.png" />
+    <icon background="@color/background" density="hdpi" foreground="res/icon/android/logosintjanhdpi.png" />
+    <icon background="@color/background" density="xhdpi" foreground="res/icon/android/logosintjanxhdpi.png" />
+    <icon background="@color/background" density="xxhdpi" foreground="res/icon/android/logosintjanxxhdpi.png" />
+    <icon background="@color/background" density="xxxhdpi" foreground="res/icon/android/logosintjanxxxhdpi.png" />
     <preference name="loglevel" value="DEBUG" />
     <preference name="webviewbounce" value="false" />
     <preference name="DisallowOverscroll" value="true" />
