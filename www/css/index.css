@@ -15,6 +15,17 @@ body {
     background: rgb(var(--background-color));
     color: rgb(var(--text-color));
 }
+.sceduleTile{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background: rgb(var(--accent-color));
+    color: rgb(var(--text-color));
+    border-radius: 5px;
+    cursor: pointer;
+}
 .centreChild{
     display: flex;
     justify-content: center;
@@ -76,11 +87,9 @@ body {
     user-select: text;
 }
 @keyframes pageSlide {
-
     0% {
         transform: translate(100vw,0px);
     }
-
     100% {
         transform: translate(0px,0px);
     }

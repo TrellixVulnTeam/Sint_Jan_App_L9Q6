@@ -19,6 +19,21 @@
     <allow-intent href="geo:*" />
     <platform name="android">
         <allow-intent href="market:*" />
+		<resource-file src="res/values/colors.xml" target="/app/src/main/res/values/colors.xml" />
+		<!--
+            ldpi    : 36x36 px
+            mdpi    : 48x48 px
+            hdpi    : 72x72 px
+            xhdpi   : 96x96 px
+            xxhdpi  : 144x144 px
+            xxxhdpi : 192x192 px
+        -->
+	    <icon background="@color/background" density="ldpi" foreground="res/icon/android/logosintjanldpi.png" />
+	    <icon background="@color/background" density="mdpi" foreground="res/icon/android/logosintjanmdpi.png" />
+	    <icon background="@color/background" density="hdpi" foreground="res/icon/android/logosintjanhdpi.png" />
+	    <icon background="@color/background" density="xhdpi" foreground="res/icon/android/logosintjanxhdpi.png" />
+	    <icon background="@color/background" density="xxhdpi" foreground="res/icon/android/logosintjanxxhdpi.png" />
+	    <icon background="@color/background" density="xxxhdpi" foreground="res/icon/android/logosintjanxxxhdpi.png" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />

@@ -8,7 +8,6 @@ Zermelo.CheckAccessToken = async (zermObj) => {//check if access_token or refres
 }
 Zermelo.GetToken = async (zermObj, code) => {//get token via refresh or password grand type
     var result = await post(Zermelo.baseEndpoint + "oauth/token", { "grant_type": "authorization_code", "code": code }, { "Content-Type": "application/x-www-form-urlencoded" });
-    alert(result.access_token)
     zermObj.access_token = result.access_token;
     await Zermelo.GetTokenData(zermObj, result.access_token);
     return result.access_token;

@@ -40,18 +40,21 @@
             <title>Sint-jan's College</title>
         </head>
     <body>
-        <div class="container shadow globalHorizontalCentre centreChild" style="position:absolute;height: 8vh;width:90%;top:1vh">
-            <h1>Sint-jan's College</h1>
+        <p id="debug">0</p>
+        <div class="shadow globalHorizontalCentre centreChild" style="position:absolute;height: 9vh;width:90%;left: 1vw;">
+            <!--<h1>Sint-jan's College</h1>-->
+            <img src="img/logosintjan.svg" alt="" style="height: 100%;transform: translate(50%,0);">
         </div>
         <div id="data"></div>
         <div id="bottumBar" class="container" style="height: 10vh;display: flex;position: absolute; bottom:0px">
             <script>
                 let bar = document.getElementById("bottumBar");
+                let labels = ["Home", "Grades", "Scedule", "Settings"];
                 for (let i = 0; i < 4; i++) {
                     let button = document.createElement("div")
                     button.className = "btn";
                     button.onclick = () => { setTab(i); }
-                    button.innerText = "btn" + i;
+                    button.innerText = labels[i];
                     bar.appendChild(button);
                 }
             </script>

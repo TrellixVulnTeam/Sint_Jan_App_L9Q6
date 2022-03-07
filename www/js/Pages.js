@@ -7,10 +7,10 @@ let Page = {
     init: (data) => { },
     endAnimation: (data) => { },
     unload: (data) => { },
-    startEvent: (e,data) => { },
-    moveEvent: (e,data) => { },
-    stopEvent: (e,data) => { },
-    data: {cancelEvent: false}
+    startEvent: (e, data) => { },
+    moveEvent: (e, data) => { },
+    stopEvent: (e, data) => { },
+    data: { cancelEvent: false }
 }
 let openApplication = (id) => {
     var data = links[id];
@@ -43,79 +43,100 @@ let updateScedule = (weekOffset, t) => {
     var c = current;
     if (t != null)
         c = t;
-    var first = new Date();
-    first.setDate(first.getDate() - first.getDay() - 6 + weekOffset * 7);
-    first.setHours(0);
-    settings.zerm.kwtUren = [];
-    let parseKwt = (data) => {
-        //alert(JSON.stringify(data));
-        for(var i = 0;i<data.length;i++){
-            var weekNum = Math.floor((data[i].startDate - first) / (1000 * 60 * 60 * 24 * 7));
-            settings.zerm.kwtUren[weekNum] = [];
-            for(var j = 0;j<data[i].actions.length;j++){
-                if(data[i].actions[j].post != null)
-                    alert(data[i].actions[j].post);
-            }
+    var currentdate = new Date();
+    var oneJan = new Date(currentdate.getFullYear(), 0, 1);
+    var numberOfDays = Math.floor((currentdate - oneJan) / (24 * 60 * 60 * 1000)) + 1 - (7 - (oneJan.getDay() - 1));
+    var result = Math.ceil(numberOfDays / 7);
+    for (let i = 0; i < 3; i++) {
+        var weekDays = ["ma","di","wo","do","vr"];//,"za","zo"];
+        var header = c.children[i].getElementsByClassName("num")[0];
+        while (header.hasChildNodes()) { header.removeChild(header.lastChild) }   
+        for(let j = 0; j < 5; j++) {
+            var day = document.createElement("p");
+            day.innerText = weekDays[j];
+            c.children[i].getElementsByClassName("num")[0].appendChild(day);
+        }
+        var parrent = c.children[i].children[1]
+        while (parrent.hasChildNodes()) { parrent.removeChild(parrent.lastChild) }   
+        try {  
+            settings.sceduleData.data[result-1+i+weekOffset].forEach(week => {
+                if(week.subject != null)
+                    AddBlock(c, i, week.start, week.end, week.subject.afkorting + "<br>" + week.location + "<br>" + week.teacher, 5);
+                else if(week.actions != null) {
+                    AddBlock(c, i, week.start, week.end, "KWT", 5, () => {setTab(5, week.actions);});
+                }
+            });
+        } catch (err) {
+            console.log(err);
         }
     }
-    var last = new Date(first.getTime() + 1000 * 3600 * 24 * 7 * 3)
-    Zermelo.GetScedule(settings.zerm, 2022,3).then(parseKwt).then(()=>{
-        Zermelo.GetScedule(settings.zerm, 2022,4).then(parseKwt).then(()=>{
-            Zermelo.GetScedule(settings.zerm, 2022,5).then(parseKwt).then(()=>{
-            }).catch((err)=>{alert(err)});
-        }).catch((err)=>{alert(err)});
-    }).catch((err)=>{alert(err)});
-    if(somReady)
-        Somtoday.GetScedule(settings.som, first, last).then((sc) => {
-            var sceduleData = [[], [], []]
-            var maxday = [-1, -1, -1]
-            for (var i = 0; i < sc.items.length; i++) {
-                var beginTime = new Date(sc.items[i].beginDatumTijd);
-                var weekNum = Math.floor((beginTime - first) / 3600 / 24 / 7 / 1000);
-                var teacher = sc.items[i].additionalObjects.docentAfkortingen;//get techer code
-                var endTime = new Date(sc.items[i].eindDatumTijd);//gets the end time of the subject
-                //var name = sc.items[i].additionalObjects.vak.afkorting;//get short name of subject
-                var name = sc.items[i].titel;
-                var location = sc.items[i].locatie;//get location of subject
-                if (maxday[weekNum] < beginTime.getDay() - 1)
-                    maxday[weekNum] = beginTime.getDay() - 1
-                sceduleData[weekNum][sceduleData[weekNum].length] = { "teacher": teacher, "beginTime": beginTime, "endTime": endTime, "name": name, "location": location };
-            }
-            for (let i = 0; i < 3; i++) {
-                maxday[i]++;
-                c.children[i].getElementsByClassName("num")[0].innerText = (i - 1) + "p" + (weekOffset)
-                var parrent = current.children[i].children[1]
-                while (parrent.hasChildNodes()) { parrent.removeChild(parrent.lastChild) }
-                for (let j = 0; j < sceduleData[i].length; j++) {
-                    var left = (sceduleData[i][j].beginTime.getDay() - 1) * 100 / maxday[i];
-                    var dayBegin = new Date(sceduleData[i][j].beginTime);
-                    dayBegin.setMinutes(30);
-                    dayBegin.setHours(8);
-                    var time = (sceduleData[i][j].beginTime - dayBegin) / 1000 / 60 / 50 / 8 * 64;
-                    var length = (sceduleData[i][j].endTime - sceduleData[i][j].beginTime) / 1000 / 60 / 50 / 8 * 64;
-                    c.children[i].children[1].innerHTML += "<div style='position:absolute;top:calc(8vh + " + time + "vh);left:" + left + "%;width:14%;height:" + length + "vh;background:gray'>" + sceduleData[i][j].location + "<br>" + sceduleData[i][j].teacher + "</div>"
-                }
-            }
-        }).catch((e)=>{alert("Error scedule: "+e)});
 }
-let setColor = (e) => {
-    if(e) {
-        document.documentElement.style.setProperty('--text-color',"255,255,255");
-        document.documentElement.style.setProperty('--background-color',"0,0,0");
-        document.documentElement.style.setProperty('--accent-color',"48,48,48");
+let AddBlock = (root, pageId, beginTime, endTime, innerHTML, maxday, onClick) => {
+    var left = (beginTime.getDay() - 1) * 100 / maxday;
+    var dayBegin = new Date(beginTime);
+    dayBegin.setMinutes(30);
+    dayBegin.setHours(8);
+    var time = (beginTime - dayBegin) / 1000 / 60 / 50 / 8 * 64;
+    var length = (endTime - beginTime) / 1000 / 60 / 50 / 8 * 64;
+
+    var newdiv = document.createElement("div");
+    newdiv.className = "sceduleTile";
+    newdiv.style.position = "absolute";
+    newdiv.style.top = "calc(8vh + " + time + "vh)";
+    newdiv.style.left = left + "%";
+    newdiv.innerHTML = innerHTML;
+    newdiv.style.width = 100/maxday+"%";
+    newdiv.style.height = length + "vh";
+    newdiv.onclick = onClick;
+    root.children[pageId].children[1].appendChild(newdiv);
+}
+let CashWeekSom = async (weekNumber) => {
+    var first = new Date();
+    first.setMonth(0);
+    first.setDate(1);
+    first.setDate(2 - first.getDay() + 7 * weekNumber);
+    var last = new Date(first.getTime() + 1000 * 3600 * 24 * 7)
+    let sc = await Somtoday.GetScedule(settings.som, first, last);
+    return sc.items.map((item) => {
+        return {
+            teacher: item.additionalObjects.docentAfkortingen,
+            subject: item.additionalObjects.vak,
+            start: new Date(item.beginDatumTijd),
+            end: new Date(item.eindDatumTijd),
+            location: item.locatie,
+    }});
+}
+let CashWeekZerm = async (weekNumber) => {
+    let sc = await Zermelo.GetScedule(settings.zerm, 2022, weekNumber);
+    return sc.filter(item => item.appointmentType == "choice").map((item) => {return {
+            start: new Date(item.start * 1000),
+            end: new Date(item.end * 1000),
+            actions: item.actions.map(item => {return {
+                    allowed: item.appointment.allowedActions,
+                    subjects: item.appointment.subjects,
+                    locations: item.appointment.locations,
+                    teachers: item.appointment.teachers,
+                    post: item.post,
+    }}),}});
+}
+let setColor = (e, saved) => {
+    if (e) {
+        document.documentElement.style.setProperty('--text-color', "255,255,255");
+        document.documentElement.style.setProperty('--background-color', "0,0,0");
+        document.documentElement.style.setProperty('--accent-color', "48,48,48");
     } else {
-        document.documentElement.style.setProperty('--text-color',"0,0,0");
-        document.documentElement.style.setProperty('--background-color',"255,255,255");
-        document.documentElement.style.setProperty('--accent-color',"244,244,244");
+        document.documentElement.style.setProperty('--text-color', "0,0,0");
+        document.documentElement.style.setProperty('--background-color', "255,255,255");
+        document.documentElement.style.setProperty('--accent-color', "244,244,244");
     }
     settings.isDark = e;
-    Filesystem.WriteFile("settings.json", settings).catch(() => {});
+    if(!saved)
+        Filesystem.WriteFile("settings.json", settings).catch(() => { });
 };
 let test = async (e) => {
     var val = e.srcElement.parentElement.getElementsByTagName("input")[1].value;
-    alert(val);
     await Zermelo.GetToken(settings.zerm, val);
-    Filesystem.WriteFile("settings.json", settings).catch(() => {});
+    Filesystem.WriteFile("settings.json", settings).catch(() => { });
 }
 var pages = [];
 pages.push({
@@ -139,17 +160,17 @@ pages.push({
         let element = document.createElement("div");
         element.classList.add("container");
         element.style.cssText = "height:100%";
-        if(somReady)
+        if (somReady)
             Somtoday.GetGrades(settings.som, settings.som.student.items[0].links[0].id).then((val3) => {
                 var names = Object.keys(val3);
                 for (let i = 0; i < names.length; i++) {
                     let button = document.createElement("p");
                     button.classList.add("task");
-                    button.onclick = () => {setTab(4, [names[i],val3[names[i]]]);};
+                    button.onclick = () => { setTab(4, [names[i], val3[names[i]]]); };
                     button.innerHTML = names[i];
                     element.appendChild(button);
                 }
-            }).catch((err) => {alert("Error: "+err)});
+            }).catch((err) => { alert("Error: " + err) });
         return element;
     }
 });
@@ -157,14 +178,14 @@ pages.push({
     ...Page,
     init: (data) => {
         let element = document.createElement("div");
-        for (let i = 0; i < 3; i++){
+        for (let i = 0; i < 3; i++) {
             element.innerHTML +=
                 "<div style='width:100vw; position:absolute; transform:translate(" + ((i - 1) * 100) + "vw,0px)'>" +
-                "<div class='container' style='height:8vh'><p style='text-align:center' class='num'>" + (i - 1) + "p" + i + "</p></div>" +
+                "<div class='container' style='height:8vh'><p style='display: flex;flex-direction: row;flex-wrap: nowrap;align-content: stretch;justify-content: space-around;align-items: center;' class='num'></div>" +
                 "<div class='container' style='height:72vh;top:8vh'>" + "</div>" +
                 "</div>";
         }
-            
+
         element.firstChild.style.display = "none";
         data.interval = setInterval(() => {
             if (!data.dragging) data.x *= smoothing
@@ -177,11 +198,11 @@ pages.push({
     },
     endAnimation: () => { current.firstChild.style.display = "block"; },
     unload: (data) => clearInterval(data.interval),
-    startEvent: (e,data) => {
+    startEvent: (e, data) => {
         data.dragging = true;
         data.lastPos = getXfromEvent(e);
     },
-    moveEvent: (e,data) => {
+    moveEvent: (e, data) => {
         if (data.dragging) {
             var x = getXfromEvent(e);
             data.dx += x - data.lastPos;
@@ -189,7 +210,7 @@ pages.push({
             data.lastPos = x;
         }
     },
-    stopEvent: (_,data) => {
+    stopEvent: (_, data) => {
         data.dragging = false;
         if (Math.abs(data.vel) > minVel) {
             const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
@@ -205,8 +226,8 @@ pages.push({
         let element = document.createElement("div");
         element.classList.add("container");
         element.style.cssText = "height:100%";
-        element.innerHTML = "Dark mode: <input type='checkbox' id='darkMode'><p onClick='setTab(5)'>open debug</p><input value='zerm code'/><button class='btn'>sendZerm</button>";
-        element.children[0].onchange = (e)=>setColor(e.srcElement.checked);
+        element.innerHTML = "Dark mode: <input type='checkbox' id='darkMode'><p onClick='setTab(6)'>open debug</p><input value='zerm code'/><p onclick='Somtoday.setLoginWindow(settings.som,window.open(Somtoday.loginLink, \"_blank\", \"location=yes,beforeload=yes\"))'>som login</p><button class='btn'>sendZerm</button>";
+        element.children[0].onchange = (e) => setColor(e.srcElement.checked);
         element.lastChild.onclick = test;
         if (settings != null)
             element.children[0].checked = (settings.isDark == true) ? true : false;
@@ -217,23 +238,23 @@ pages.push({
     ...Page,
     init: (data) => {
         var saves = ["herkansingstype",
-        "resultaat",
-        "geldendResultaat",
-        "datumInvoer",
-        "teltNietmee",
-        "toetsNietGemaakt",
-        "leerjaar",
-        "periode",
-        "weging",
-        "examenWeging",
-        "isExamendossierResultaat",
-        "isVoortgangsdossierResultaat",
-        "type",
-        "omschrijving"];
+            "resultaat",
+            "geldendResultaat",
+            "datumInvoer",
+            "teltNietmee",
+            "toetsNietGemaakt",
+            "leerjaar",
+            "periode",
+            "weging",
+            "examenWeging",
+            "isExamendossierResultaat",
+            "isVoortgangsdossierResultaat",
+            "type",
+            "omschrijving"];
         var newData = [];
-        for(var j = 0;j<data[1].length;j++) {
+        for (var j = 0; j < data[1].length; j++) {
             newData[j] = {};
-            for(var i = 0;i<saves.length;i++) {
+            for (var i = 0; i < saves.length; i++) {
                 newData[j][saves[i]] = data[1][j][saves[i]]
             }
         }
@@ -247,32 +268,45 @@ pages.push({
         var total = 0;
         var weight = 0;
         for (let i = 0; i < data[1].length; i++)
-            if(data[1][i].type == "Toetskolom") {
+            if (data[1][i].type == "Toetskolom") {
                 weight += data[1][i].weging;
                 total += data[1][i].resultaat * data[1][i].weging;
                 view.innerHTML +=
-                    "<div style='display:flex'>" +
-                        "<p class='gradeValue' style ='font-size:35px'>" + data[1][i].resultaat + "</p>" +
-                        "<p class='gradeWeight' style='font-size:15px'>x" + data[1][i].weging + "</p>" +
+                    "<div class='sceduleTile' style='display:flex'>" +
+                    "<p class='gradeValue' style ='font-size:35px'>" + data[1][i].resultaat + "</p>" +
+                    "<p class='gradeWeight' style='font-size:15px'>x" + data[1][i].weging + "</p>" +
                     "</div>";
             }
-        view.innerHTML += "<div><p>" + ((Math.round(total*10/weight))/10) + "</p></div>";
+        view.innerHTML += "<div><p style ='font-size:35px'>Gemiddelde:" + ((Math.round(total * 10 / weight)) / 10) + "</p></div>";
+        return element;
+    }
+});
+pages.push({
+    ...Page,
+    init: (data) => {
+        let element = document.createElement("div");
+        element.classList.add("container");
+        element.style.cssText = "height:100%";
+        for (let i = 0; i < Object.keys(data).length -1; i++) {
+            element.innerHTML += "<div class='sceduleTile'>" + data[i].teachers[0] + "<br>" + data[i].locations[0] + "<br>" + data[i].subjects[0] + "</div>";
+        }
+
         return element;
     }
 });
 pages.push({
     ...Page,
     init: () => {
-        Zermelo.GetScedule(settings.zerm, 0,0).then((data)=>{
+        Zermelo.GetScedule(settings.zerm, 0, 0).then((data) => {
             settings.zerm.kwtUren = {};
-            for(var i = 0;i<data.appointments.length;i++){
-                kwtUren[data.appointments[i].start+""] = [];
-                for(var j = 0;j<data.appointments[i].actions.length;j++){
+            for (var i = 0; i < data.appointments.length; i++) {
+                kwtUren[data.appointments[i].start + ""] = [];
+                for (var j = 0; j < data.appointments[i].actions.length; j++) {
                     var appointment = data.appointments[i].actions[j].appointment;
-                    kwtUren[data.appointments[i].start+""].push({subject:appointment.subjects[0],location:appointment.locations[0],teacher:appointment.teachers[0]});
+                    kwtUren[data.appointments[i].start + ""].push({ subject: appointment.subjects[0], location: appointment.locations[0], teacher: appointment.teachers[0] });
                 }
             }
-        }).catch((e)=>{alert("Error debug: "+e)});
+        }).catch((e) => { alert("Error debug: " + e) });
         let element = document.createElement("div");
         return element;
     }
