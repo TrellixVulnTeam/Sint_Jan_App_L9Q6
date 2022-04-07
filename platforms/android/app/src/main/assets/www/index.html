@@ -1,70 +1,89 @@
 <!DOCTYPE html>
-    <html>
-        <head>
-            <meta charset="utf-8">
-            <!--
-            Customize this policy to fit your own app's needs. For more guidance, see:
-                https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
-            Some notes:
-                * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
-                * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
-                * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
-                    * Enable inline JS: add 'unsafe-inline' to default-src
-            -->
-            <!--/*
-            * Licensed to the Apache Software Foundation (ASF) under one
-            * or more contributor license agreements.  See the NOTICE file
-            * distributed with this work for additional information
-            * regarding copyright ownership.  The ASF licenses this file
-            * to you under the Apache License, Version 2.0 (the
-            * "License"); you may not use this file except in compliance
-            * with the License.  You may obtain a copy of the License at
-            *
-            * http://www.apache.org/licenses/LICENSE-2.0
-            *
-            * Unless required by applicable law or agreed to in writing,
-            * software distributed under the License is distributed on an
-            * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-            * KIND, either express or implied.  See the License for the
-            * specific language governing permissions and limitations
-            * under the License.
-            */-->
-            <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">-->
-            <meta http-equiv="Content-Security-Policy" content="default-src * gap: ws: https://ssl.gstatic.com;style-src * 'unsafe-inline' 'self' data: blob:;script-src * 'unsafe-inline' 'unsafe-eval' data: blob:;img-src * data: 'unsafe-inline' 'self'">
-            <meta name="format-detection" content="telephone=no">
-            <meta name="msapplication-tap-highlight" content="no">
-            <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
-            <meta name="viewport" content="initial-scale=1.0, width=device-width, maximum-scale=1.0, user-scalable=0" />
-            <meta name="color-scheme" content="light dark">
-            <link rel="stylesheet" href="css/index.css">
-            <title>Sint-jan's College</title>
-        </head>
-    <body>
-        <p id="debug">0</p>
-        <div class="shadow globalHorizontalCentre centreChild" style="position:absolute;height: 9vh;width:90%;left: 1vw;">
-            <!--<h1>Sint-jan's College</h1>-->
-            <img src="img/logosintjan.svg" alt="" style="height: 100%;transform: translate(50%,0);">
-        </div>
-        <div id="data"></div>
-        <div id="bottumBar" class="container" style="height: 10vh;display: flex;position: absolute; bottom:0px">
-            <script>
-                let bar = document.getElementById("bottumBar");
-                let labels = ["Home", "Grades", "Scedule", "Settings"];
-                for (let i = 0; i < 4; i++) {
-                    let button = document.createElement("div")
-                    button.className = "btn";
-                    button.onclick = () => { setTab(i); }
-                    button.innerText = labels[i];
-                    bar.appendChild(button);
-                }
-            </script>
-        </div>
-        <script src="cordova.js"></script>
-        <script>window.onerror = (e) => { alert(e) }</script>
-        <script src="js/FileSystem.js"></script>
-        <script src="js/Somtoday.js"></script>
-        <script src="js/Zermelo.js"></script>
-        <script src="js/Pages.js"></script>
-        <script src="js/index.js"></script>
-    </body>
+	<html>
+		<head>
+			<meta charset="utf-8">
+			<!--
+			Customize this policy to fit your own app's needs. For more guidance, see:
+				https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+			Some notes:
+				* gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+				* https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+				* Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+					* Enable inline JS: add 'unsafe-inline' to default-src
+			-->
+			<!--/*
+			* Licensed to the Apache Software Foundation (ASF) under one
+			* or more contributor license agreements.  See the NOTICE file
+			* distributed with this work for additional information
+			* regarding copyright ownership.  The ASF licenses this file
+			* to you under the Apache License, Version 2.0 (the
+			* "License"); you may not use this file except in compliance
+			* with the License.  You may obtain a copy of the License at
+			*
+			* http://www.apache.org/licenses/LICENSE-2.0
+			*
+			* Unless required by applicable law or agreed to in writing,
+			* software distributed under the License is distributed on an
+			* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+			* KIND, either express or implied.  See the License for the
+			* specific language governing permissions and limitations
+			* under the License.
+			*/-->
+			<!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">-->
+			<meta http-equiv="Content-Security-Policy" content="default-src * gap: ws: https://ssl.gstatic.com;style-src * 'unsafe-inline' 'self' data: blob:;script-src * 'unsafe-inline' 'unsafe-eval' data: blob:;img-src * data: 'unsafe-inline' 'self'">
+			<meta name="format-detection" content="telephone=no">
+			<meta name="msapplication-tap-highlight" content="no">
+			<meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+			<meta name="viewport" content="initial-scale=1.0, width=device-width, maximum-scale=1.0, user-scalable=0" />
+			<meta name="color-scheme" content="light dark">
+			<link rel="stylesheet" href="css/index.css">
+			<title>Sint-jan's College</title>
+		</head>
+	<body style="font-size:2.5vw">
+		<p id="debug">0</p>
+		<div class="shadow" style="position:absolute;height: 9vh;width:90%;left: 1vw;display:flex">
+			<img src="img/logosintjan.svg" alt="" style="height: 100%" onclick="openApplication(0);">
+			<div style="margin-left: 20px;font-weight: bold;color: rgb(var(--text-color));">
+				Contact:
+				<div style="display: flex">
+					<p style="margin: 10px 10px 10px 0px">
+						<a href="tel:+31455218666" style=" color: rgb(var(--text-color)); text-decoration: auto;">
+							&#128222;045-5218666
+						</a>
+						<br>
+						<a href="mailto:info@sintjan-lvo.nl" alt="" style=" color: rgb(var(--text-color)); text-decoration: auto;">
+							&#128231;info@sintjan-lvo.nl
+						</a>
+					</p>
+					<p style="margin: 10px">
+						<a href="https://www.google.com/maps/dir//Sint-Janscollege,+Amstenraderweg+122,+6431+EN+Hoensbroek/" target="_blank" rel="external" style=" color: rgb(var(--text-color)); text-decoration: auto;">
+							&#128204;Amstenraderweg 122<br>
+							6431 EN Hoensbroek
+						</a>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div id="data"></div>
+		<div id="bottumBar" class="container" style="height: 10vh;display: flex;position: absolute; bottom:0px">
+			<script>
+				let bar = document.getElementById("bottumBar");
+				let labels = ["Home", "Grades", "Scedule", "Settings"];
+				for (let i = 0; i < 4; i++) {
+					let button = document.createElement("div")
+					button.className = "btn";
+					button.onclick = () => { setTab(i); }
+					button.innerText = labels[i];
+					bar.appendChild(button);
+				}
+			</script>
+		</div>
+		<script src="cordova.js"></script>
+		<script>window.onerror = (e) => { alert(e) }</script>
+		<script src="js/FileSystem.js"></script>
+		<script src="js/Somtoday.js"></script>
+		<script src="js/Zermelo.js"></script>
+		<script src="js/Pages.js"></script>
+		<script src="js/index.js"></script>
+	</body>
 </html>

@@ -1,0 +1,13 @@
+nl.sint_jan.app
+color background
+drawable ic_action_next_item
+drawable ic_action_previous_item
+drawable ic_action_remove
+drawable screen
+mipmap ic_launcher
+mipmap ic_launcher_foreground
+string activity_name
+string app_name
+string launcher_name
+xml config
+xml file_paths
