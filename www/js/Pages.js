@@ -1,4 +1,5 @@
 var links = [
+    { hasApp: false, img: "img/logosintjan.svg", name: "Sint-Jan", link: "https://www.sintjan-lvo.nl/" },
     { hasApp: true, img: "img/som.svg", name: "somtoday", androidURI: "nl.topicus.somtoday.leerling", iosURI: "somtodayleerling://", link: "https://somtoday.nl/" },
     { hasApp: true, img: "img/itl.svg", name: "itslearn", androidURI: "com.itslearning.itslearningintapp", iosURI: "itslearning://", link: "https://lvo.itslearning.com/" },
     { hasApp: true, img: "img/zrm.svg", name: "zermelo", link: "https://account.activedirectory.windowsazure.com/applications/signin/40a96122-51bb-430a-b504-6a225c51e676" },
@@ -23,7 +24,8 @@ let openApplication = (id) => {
         }
         app.check(function (values) {
             app.start(function () { }, function (error) {
-                alert("ext app start fail (" + error + ")");
+                alert("Failed to start External app (" + error + ")");
+                inAppBrowserRef = window.open(data.link, '_blank', 'location=yes');
             });
         }, function (error) {
             inAppBrowserRef = window.open(data.link, '_blank', 'location=yes');
@@ -134,8 +136,9 @@ let setColor = (e, saved) => {
         Filesystem.WriteFile("settings.json", settings).catch(() => { });
 };
 let test = async (e) => {
-    var val = e.srcElement.parentElement.getElementsByTagName("input")[1].value;
+    var val = e.srcElement.parentElement.getElementsByTagName("input")[0].value;
     await Zermelo.GetToken(settings.zerm, val);
+    alert(settings.zerm.access_token);
     Filesystem.WriteFile("settings.json", settings).catch(() => { });
 }
 var pages = [];
@@ -146,7 +149,7 @@ pages.push({
         element.style.cssText = "height: 100%; flex-flow: row wrap; place-content: flex-start center;";
         element.classList.add("container");
         element.classList.add("centreChild");
-        for (let i = 0; i < links.length; i++)
+        for (let i = 1; i < links.length; i++)
             element.innerHTML +=
                 "<div style='padding:2vw'>" +
                 "<img class='shadow' style='width:40vw' alt=" + links[i].name + " src=" + links[i].img + " onclick=\"openApplication(" + i + ")\">" +
@@ -226,9 +229,20 @@ pages.push({
         let element = document.createElement("div");
         element.classList.add("container");
         element.style.cssText = "height:100%";
-        element.innerHTML = "Dark mode: <input type='checkbox' id='darkMode'><p onClick='setTab(6)'>open debug</p><input value='zerm code'/><p onclick='Somtoday.setLoginWindow(settings.som,window.open(Somtoday.loginLink, \"_blank\", \"location=yes,beforeload=yes\"))'>som login</p><button class='btn'>sendZerm</button>";
+        element.innerHTML =
+            "<div>" +
+            "Dark mode: <input type='checkbox' id='darkMode'>" +
+            "</div>"+
+            "<br>" +
+            //"<p onClick='setTab(6)'>open debug</p>" +
+            "<button class='btn' style=\"width:50vw\" onclick='Somtoday.setLoginWindow(settings.som,window.open(Somtoday.loginLink, \"_blank\", \"location=yes,beforeload=yes\"))'>Somtoday Login</button>" +
+            "<br>"+
+            "<div style=\"width:50vw\">" +
+            "<input value='zerm code' style=\"width:100%;height:1.5em\"/>" +
+            "<button class='btn'>Zermelo Login</button>" +
+            "</div>";
         element.children[0].onchange = (e) => setColor(e.srcElement.checked);
-        element.lastChild.onclick = test;
+        element.lastChild.lastChild.onclick = test;
         if (settings != null)
             element.children[0].checked = (settings.isDark == true) ? true : false;
         return element;

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#FF0000</color>
+    <string name="activity_name">@string/launcher_name</string>
+    <string name="app_name">Sint-jan App</string>
+    <string name="launcher_name">@string/app_name</string>
+</resources>

@@ -70,7 +70,6 @@ Somtoday.onSomtodayRedirect = async (som, event, callback) => {
 	if(event.url.startsWith("somtodayleerling://oauth:443/callback")){
 		var linkCode = event.url.replace("somtodayleerling://oauth:443/callback?code=","").split("&")[0];
 		som.loginWindow.close();
-        alert("before redirect");
         await Somtoday.GetToken(som, "authorization_code", "", {
             "redirect_uri":"somtodayleerling://oauth/callback",
             "code_verifier":"t9b9-QCBB3hwdYa3UW2U2c9hhrhNzDdPww8Xp6wETWQ",

@@ -10,6 +10,7 @@ html{
     --accent-color: 244, 244, 244;
 }
 body {
+    font-size: 3vw;
     font-family: sans-serif;
     overflow: hidden;
     background: rgb(var(--background-color));
@@ -64,12 +65,11 @@ body {
     border-radius: 5px;
     cursor: pointer;
     text-decoration: none;
-    font-size: 15px;
     font-family: inherit;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: calc(100% - 10px);
 }
     .btn:focus {
         outline: none;

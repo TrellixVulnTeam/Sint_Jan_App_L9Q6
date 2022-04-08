@@ -25,7 +25,7 @@ var pad = (num, size) => {//padds a number with leading zerros  (4 => "04")
     return num;
 }
 var post = async (link, data, header) => {
-    if(typeof cordovaHTTP == "undefined") throw "cordovaHTTP not found";
+    if (typeof cordovaHTTP == "undefined") throw "cordovaHTTP not found";
     return new Promise((resolve, reject) => {
         cordovaHTTP.post(link, data, header, function (response) {
             try{
@@ -39,7 +39,7 @@ var post = async (link, data, header) => {
     });
 }
 var get = async (link, header) => {
-    if(typeof cordovaHTTP == "undefined") throw "cordovaHTTP not found";
+    if (typeof cordovaHTTP == "undefined") throw "cordovaHTTP not found";
     return new Promise((resolve, reject) => {
         cordovaHTTP.get(link, {}, header, function (response) {
             try{
@@ -66,8 +66,14 @@ function getStudent() {
     }).catch((e) => { alert("Error logining in to somtoday: " + e) });
 }
 async function init(isCordova) {//cordova.file.dataDirectory
-    settings = { isDark: false, som: {}, zerm: {}, sceduleData: {data:[]} };
+    settings = { isDark: false, som: {}, zerm: {}, sceduleData: { data: [] } };
     if (isCordova) {
+        try {
+            settings.som.onTokenUpdate = () => { Filesystem.WriteFile("settings.json", settings); };
+        } catch (e) {
+            alert("Error idk: " + e);
+        }
+        window.open = cordova.InAppBrowser.open;
         await Filesystem.ReadFile("settings.json").then((o) => {
             if (o != null)
                 settings = o;
@@ -80,7 +86,6 @@ async function init(isCordova) {//cordova.file.dataDirectory
             somReady = true;
         }).catch((e) => { alert("Error getting student data: " + e) });
         somReady = true;
-        window.open = cordova.InAppBrowser.open;
         platform = device.platform;
     }
     setTimeout(()=>{
@@ -101,19 +106,22 @@ async function loadScedule(weekDist) {
     var loadData = async (week) => {
         var som = [];
         var zerm = [];
-        try{
-            som = await CashWeekSom(week);
-            zerm = await CashWeekZerm(week);
-        }catch(e){alert(e);}
+        som = await CashWeekSom(week);
+        zerm = await CashWeekZerm(week);
         document.getElementById("debug").innerHTML = week;
         settings.sceduleData.data[week] = [...zerm, ...som];
     }
-    await loadData(result);
-    while(settings.sceduleData.max - result <= weekDist){
-        await loadData(settings.sceduleData.max+1);
-        settings.sceduleData.max++;
-        await loadData(settings.sceduleData.min-1);
-        settings.sceduleData.min--;
+    try {
+        await loadData(result);
+        while (settings.sceduleData.max - result <= weekDist) {
+            await loadData(settings.sceduleData.max + 1);
+            settings.sceduleData.max++;
+            await loadData(settings.sceduleData.min - 1);
+            settings.sceduleData.min--;
+        }
+    } catch (e) {
+        alert("Faild to gather scedule info please login to Somtoday and Zermelo ("+e+")");
+        return;
     }
     Filesystem.WriteFile("settings.json", settings).catch(() => { });
 }
@@ -134,8 +142,14 @@ document.body.addEventListener("touchcancel", mouseEvent, false);
 document.body.addEventListener("touchmove", mouseEvent, false);
 document.getElementById("data").onmousedown = mouseEvent
 document.getElementById("data").addEventListener("touchstart", mouseEvent, false);
-document.addEventListener('deviceready', () => { init(true); }, false)
+document.addEventListener('deviceready', () => {
+    try {
+        init(true);
+    } catch (e) {
+        alert("Error during init: " + e);
+    }
+}, false)
 setTab(0);
 if (typeof (cordova) == "undefined") {
-    init(false);
+    //init(false);
 }
