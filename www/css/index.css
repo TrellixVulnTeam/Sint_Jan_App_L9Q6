@@ -10,6 +10,7 @@ html{
     --accent-color: 244, 244, 244;
 }
 body {
+    font-size: 3vw;
     font-family: sans-serif;
     overflow: hidden;
     background: rgb(var(--background-color));

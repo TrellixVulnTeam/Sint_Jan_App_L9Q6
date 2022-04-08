@@ -24,7 +24,8 @@ let openApplication = (id) => {
         }
         app.check(function (values) {
             app.start(function () { }, function (error) {
-                alert("ext app start fail (" + error + ")");
+                alert("Failed to start External app (" + error + ")");
+                inAppBrowserRef = window.open(data.link, '_blank', 'location=yes');
             });
         }, function (error) {
             inAppBrowserRef = window.open(data.link, '_blank', 'location=yes');
@@ -135,8 +136,9 @@ let setColor = (e, saved) => {
         Filesystem.WriteFile("settings.json", settings).catch(() => { });
 };
 let test = async (e) => {
-    var val = e.srcElement.parentElement.getElementsByTagName("input")[1].value;
+    var val = e.srcElement.parentElement.getElementsByTagName("input")[0].value;
     await Zermelo.GetToken(settings.zerm, val);
+    alert(settings.zerm.access_token);
     Filesystem.WriteFile("settings.json", settings).catch(() => { });
 }
 var pages = [];
@@ -227,15 +229,20 @@ pages.push({
         let element = document.createElement("div");
         element.classList.add("container");
         element.style.cssText = "height:100%";
-        element.innerHTML = "Dark mode: <input type='checkbox' id='darkMode'>" +
+        element.innerHTML =
+            "<div>" +
+            "Dark mode: <input type='checkbox' id='darkMode'>" +
+            "</div>"+
+            "<br>" +
             //"<p onClick='setTab(6)'>open debug</p>" +
             "<button class='btn' style=\"width:50vw\" onclick='Somtoday.setLoginWindow(settings.som,window.open(Somtoday.loginLink, \"_blank\", \"location=yes,beforeload=yes\"))'>Somtoday Login</button>" +
-            "<div style=\"width:50vw\">"+
+            "<br>"+
+            "<div style=\"width:50vw\">" +
             "<input value='zerm code' style=\"width:100%;height:1.5em\"/>" +
-            "<button class='btn' style=\"height:1.5em\">Zermelo Login</button>" +
+            "<button class='btn'>Zermelo Login</button>" +
             "</div>";
         element.children[0].onchange = (e) => setColor(e.srcElement.checked);
-        element.lastChild.onclick = test;
+        element.lastChild.lastChild.onclick = test;
         if (settings != null)
             element.children[0].checked = (settings.isDark == true) ? true : false;
         return element;
