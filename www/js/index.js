@@ -57,44 +57,44 @@ function mouseEvent(e) {
         else if (e.type == 'touchstart' || e.type == 'mousedown') page.startEvent(e, page.data);
         else if (e.type == 'touchend'   || e.type == 'mouseup' || e.type == 'touchcancel') page.stopEvent(e, page.data);
 }
-function getStudent() {
-    Somtoday.getPasswordToken(settings.som, "sj1011103@leerling.sintjan-lvo.nl", "9509466").then(() => {
-        Somtoday.GetStudent(settings.som).then((val2) => {
-            settings.som.student = val2;
-            somReady = true;
-        }).catch((e) => { alert("Error getting student data: " + e) });
-    }).catch((e) => { alert("Error logining in to somtoday: " + e) });
-}
+//function getStudent() {
+//    Somtoday.getPasswordToken(settings.som, "sj1011103@leerling.sintjan-lvo.nl", "9509466").then(() => {
+//       Somtoday.GetStudent(settings.som).then((val2) => {
+//            settings.som.student = val2;
+//            somReady = true;
+//        }).catch((e) => { alert("Error getting student data: " + e) });
+//    }).catch((e) => { alert("Error logining in to somtoday: " + e) });
+//}
 async function init(isCordova) {//cordova.file.dataDirectory
     settings = { isDark: false, som: {}, zerm: {}, sceduleData: { data: [] } };
     if (isCordova) {
-        try {
-            settings.som.onTokenUpdate = () => { Filesystem.WriteFile("settings.json", settings); };
-        } catch (e) {
-            alert("Error idk: " + e);
-        }
+        settings.som.onTokenUpdate = () => { Filesystem.WriteFile("settings.json", settings); };
         window.open = cordova.InAppBrowser.open;
         await Filesystem.ReadFile("settings.json").then((o) => {
-            if (o != null)
+            if (o != null && !(JSON.stringify(o) == JSON.stringify(settings))) {
                 settings = o;
+                hasSaveFile = true;
+            }
             setColor(settings.isDark, true);
             document.body.className = settings.isDark ? 'black' : '';
         }).catch((e1) => Filesystem.WriteFile("settings.json", settings).catch((e2) => alert("Error saving/reading settings: " + e2 + " " + e1)));
         //await Somtoday.CheckAccessToken(settings.som).catch(getStudent);
-        Somtoday.GetStudent(settings.som).then((val2) => {
-            settings.som.student = val2;
-            somReady = true;
-        }).catch((e) => { alert("Error getting student data: " + e) });
-        somReady = true;
         platform = device.platform;
-    }
-    setTimeout(()=>{
-        try {
-            loadScedule(3);
-        } catch (e) {
-            alert("Error loading scedule: " + e);
+        if (hasSaveFile) {
+            Somtoday.GetStudent(settings.som).then((val2) => {
+                settings.som.student = val2;
+                somReady = true;
+            }).catch((e) => { alert("Error getting student data: " + e) });
+            somReady = true;
+            setTimeout(() => {
+                try {
+                    loadScedule(3);
+                } catch (e) {
+                    alert("Error loading scedule: " + e);
+                }
+            }, 1000);
         }
-    }, 1000);
+    }
 };
 async function loadScedule(weekDist) {
     var currentdate = new Date();
@@ -125,6 +125,7 @@ async function loadScedule(weekDist) {
     }
     Filesystem.WriteFile("settings.json", settings).catch(() => { });
 }
+var hasSaveFile = false;
 var somReady = false;
 var settings;
 var page;

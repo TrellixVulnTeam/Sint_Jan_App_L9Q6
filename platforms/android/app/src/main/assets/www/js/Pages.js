@@ -42,6 +42,7 @@ let getXfromEvent = (e) => {
     return (!(evt.touches === 'undefined' || evt.changedTouches)) ? e.clientX : (evt.touches[0] || evt.changedTouches[0]).pageX;
 }
 let updateScedule = (weekOffset, t) => {
+    console.log(t);
     var c = current;
     if (t != null)
         c = t;
@@ -58,18 +59,25 @@ let updateScedule = (weekOffset, t) => {
             day.innerText = weekDays[j];
             c.children[i].getElementsByClassName("num")[0].appendChild(day);
         }
-        var parrent = c.children[i].children[1]
-        while (parrent.hasChildNodes()) { parrent.removeChild(parrent.lastChild) }   
-        try {  
-            settings.sceduleData.data[result-1+i+weekOffset].forEach(week => {
-                if(week.subject != null)
-                    AddBlock(c, i, week.start, week.end, week.subject.afkorting + "<br>" + week.location + "<br>" + week.teacher, 5);
-                else if(week.actions != null) {
-                    AddBlock(c, i, week.start, week.end, "KWT", 5, () => {setTab(5, week.actions);});
-                }
-            });
-        } catch (err) {
-            console.log(err);
+        if (hasSaveFile) {
+            var parrent = c.children[i].children[1]
+            while (parrent.hasChildNodes()) { parrent.removeChild(parrent.lastChild) }
+            try {
+                settings.sceduleData.data[result - 1 + i + weekOffset].forEach(week => {
+                    if (week.subject != null)
+                        AddBlock(c, i, week.start, week.end, week.subject.afkorting + "<br>" + week.location + "<br>" + week.teacher, 5);
+                    else if (week.actions != null) {
+                        AddBlock(c, i, week.start, week.end, "KWT", 5, () => { setTab(5, week.actions); });
+                    }
+                });
+            } catch (err) {
+                console.log(err);
+            }
+        } else {
+            c.children[i].children[1].innerHTML +=
+                "<div style='align-items: center;display: flex;justify-content: center'>" +
+                "<p>Please log in to " +"Both Somtoday and Zermelo"+ ".</p>" +
+                "</div>";
         }
     }
 }
@@ -132,16 +140,17 @@ let setColor = (e, saved) => {
         document.documentElement.style.setProperty('--accent-color', "244,244,244");
     }
     settings.isDark = e;
-    if(!saved)
+    if (!saved) {
         Filesystem.WriteFile("settings.json", settings).catch(() => { });
+        hasSaveFile = true;
+    }
 };
 let test = async (e) => {
-    alert("test");
     var val = e.srcElement.parentElement.getElementsByTagName("input")[0].value;
-    alert(val);
     await Zermelo.GetToken(settings.zerm, val);
-    alert(settings.zerm.access_token);
+    //alert(settings.zerm.access_token);
     Filesystem.WriteFile("settings.json", settings).catch(() => { });
+    hasSaveFile = true;
 }
 var pages = [];
 pages.push({
@@ -186,11 +195,12 @@ pages.push({
         for (let i = 0; i < 3; i++) {
             element.innerHTML +=
                 "<div style='width:100vw; position:absolute; transform:translate(" + ((i - 1) * 100) + "vw,0px)'>" +
-                "<div class='container' style='height:8vh'><p style='display: flex;flex-direction: row;flex-wrap: nowrap;align-content: stretch;justify-content: space-around;align-items: center;' class='num'></div>" +
-                "<div class='container' style='height:72vh;top:8vh'>" + "</div>" +
+                  "<div class='container' style='height:8vh'><p style='display: flex;flex-direction: row;flex-wrap: nowrap;align-content: stretch;justify-content: space-around;align-items: center;' class='num'>" +
+                  "</div>" +
+                  "<div class='container' style='height:72vh;top:8vh'>" +
+                  "</div>" +
                 "</div>";
         }
-
         element.firstChild.style.display = "none";
         data.interval = setInterval(() => {
             if (!data.dragging) data.x *= smoothing
@@ -253,20 +263,21 @@ pages.push({
 pages.push({
     ...Page,
     init: (data) => {
-        var saves = ["herkansingstype",
+        var saves = [//"herkansingstype",
             "resultaat",
-            "geldendResultaat",
-            "datumInvoer",
-            "teltNietmee",
-            "toetsNietGemaakt",
-            "leerjaar",
-            "periode",
+            //"geldendResultaat",
+            //"datumInvoer",
+            //"teltNietmee",
+            //"toetsNietGemaakt",
+            //"leerjaar",
+            //"periode",
             "weging",
-            "examenWeging",
-            "isExamendossierResultaat",
-            "isVoortgangsdossierResultaat",
+            //"examenWeging",
+            //"isExamendossierResultaat",
+            //"isVoortgangsdossierResultaat",
             "type",
-            "omschrijving"];
+            //"omschrijving"
+        ];
         var newData = [];
         for (var j = 0; j < data[1].length; j++) {
             newData[j] = {};
@@ -274,7 +285,6 @@ pages.push({
                 newData[j][saves[i]] = data[1][j][saves[i]]
             }
         }
-        //alert(JSON.stringify(newData));
         let element = document.createElement("div");
         element.classList.add("container");
         element.style.cssText = "height:100%";
@@ -285,8 +295,8 @@ pages.push({
         var weight = 0;
         for (let i = 0; i < data[1].length; i++)
             if (data[1][i].type == "Toetskolom") {
-                weight += data[1][i].weging;
-                total += data[1][i].resultaat * data[1][i].weging;
+                weight = data[1][i].weging + weight;
+                total = parseFloat(data[1][i].resultaat.replace(",", ".")) * data[1][i].weging + total;
                 view.innerHTML +=
                     "<div class='sceduleTile' style='display:flex'>" +
                     "<p class='gradeValue' style ='font-size:35px'>" + data[1][i].resultaat + "</p>" +
